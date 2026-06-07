@@ -64,33 +64,34 @@ public class RestaurantOwnerController {
     }
 
     // 3. புது ஹோட்டல் ஃபார்ம் சப்மிட் ஆகும்போது (Cloudinary + Owner Mapping Updated)
-    // RestaurantOwnerController.java உள்ளே இருக்கும் saveRestaurant மெத்தடை மட்டும் மாற்றவும்:
-
     @PostMapping("/restaurant/add")
     public String saveRestaurant(@RequestParam("name") String name,
                                  @RequestParam("cuisineType") String cuisineType,
                                  @RequestParam("address") String address,
-                                 @RequestParam("imageFile") MultipartFile file,
+                                 @RequestParam(value = "imageFile", required = false) MultipartFile file, // 👈 [FIXED]: required = false மாத்தியாச்சு
                                  HttpSession session) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) return "redirect:/login";
 
         try {
-            // 1. நாம் மேனுவலாக புது ரெஸ்டாரண்ட் ஆப்ஜெக்ட் உருவாக்குகிறோம் (No Data Binding Issues!)
             Restaurant restaurant = new Restaurant();
             restaurant.setName(name);
             restaurant.setCuisineType(cuisineType);
             restaurant.setAddress(address);
             restaurant.setActive(true);
-            restaurant.setOwner(loggedInUser); // ஓனரை நேரடியாக செட் செய்கிறோம்
+            restaurant.setOwner(loggedInUser);
 
-            // 2. Cloudinary-ல் இமேஜ் அப்லோடு செய்கிறோம்
-            String imageUrl = imageUploadService.uploadImage(file);
-            if (imageUrl != null) {
-                restaurant.setImageUrl(imageUrl);
+            // 👈 [FIXED]: ஃபைல் காலியாக இல்லாமல் இருந்தால் மட்டும் Cloudinary-க்கு அனுப்பும் செக்கிங்
+            if (file != null && !file.isEmpty()) {
+                String imageUrl = imageUploadService.uploadImage(file);
+                if (imageUrl != null) {
+                    restaurant.setImageUrl(imageUrl);
+                }
+            } else {
+                // இமேஜ் வரலனா ஒரு டீஃபால்ட் இமேஜ் ஆர் எல் செட் பண்ணிக்கலாம் (Optional)
+                restaurant.setImageUrl("https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg");
             }
 
-            // 3. சேவ் செய்கிறோம்
             restaurantService.saveRestaurant(restaurant);
 
         } catch (IOException e) {
