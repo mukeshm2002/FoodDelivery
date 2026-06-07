@@ -36,6 +36,11 @@
     <h2><i class="fa-solid fa-store" style="color: #cb202d;"></i> Register Your Restaurant</h2>
 
     <form th:action="@{/owner/restaurant/add}" th:object="${restaurant}" method="post" enctype="multipart/form-data">
+
+        <!-- [ADDED FIX]: 400 Bad Request எர்ரரை தடுக்க ஓனர் ஐடி மற்றும் ஆக்டிவ் ஸ்டேட்டஸை ஹிட்டனாக அனுப்புகிறோம் -->
+        <input type="hidden" name="owner.id" th:value="${session.loggedInUser != null ? session.loggedInUser.id : ''}"/>
+        <input type="hidden" th:field="*{active}" value="true" />
+
         <div class="form-group">
             <label>Restaurant Name (உணவகத்தின் பெயர்)</label>
             <input type="text" th:field="*{name}" class="form-control" placeholder="E.g., Hotel MK Veg" required>

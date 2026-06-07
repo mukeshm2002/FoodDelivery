@@ -35,7 +35,7 @@ public class OrderController {
         try {
             Cart cart = cartService.getCartByUser(loggedInUser.getId());
             if (cart.getItems() == null || cart.getItems().isEmpty()) {
-                return "redirect:/cart?error=empty";
+                return "redirect:customer/cart?error=empty";
             }
 
             // கஸ்டமரோட சேவ் செய்யப்பட்ட அட்ரஸ் லிஸ்ட்டை எடுக்குறோம்
@@ -50,9 +50,9 @@ public class OrderController {
             model.addAttribute("addresses", addresses);
             model.addAttribute("newAddress", new DeliveryAddress()); // புது அட்ரஸ் ஆட் பண்ண ஃபார்ம் ஆப்ஜெக்ட்
 
-            return "checkout"; // checkout.html
+            return "customer/checkout"; // checkout.html
         } catch (Exception e) {
-            return "redirect:/cart";
+            return "redirect:customer/cart";
         }
     }
 
@@ -93,7 +93,7 @@ public class OrderController {
             utilitySupportService.processPayment(order, paymentMode);
 
             model.addAttribute("order", order);
-            return "order-success"; // order-success.html (ஆர்டர் கன்பர்ம் ஆன பேஜ்)
+            return "customer/order-success"; // order-success.html (ஆர்டர் கன்பர்ம் ஆன பேஜ்)
 
         } catch (Exception e) {
             return "redirect:/checkout?error=" + e.getMessage();
@@ -108,6 +108,6 @@ public class OrderController {
 
         List<Order> orderList = orderService.getCustomerOrderHistory(loggedInUser.getId());
         model.addAttribute("orders", orderList);
-        return "order-history"; // order-history.html
+        return "customer/order-history"; // order-history.html
     }
 }

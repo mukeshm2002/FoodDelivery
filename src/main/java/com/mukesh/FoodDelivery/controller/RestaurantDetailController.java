@@ -39,7 +39,7 @@ public class RestaurantDetailController {
 
             model.addAttribute("restaurant", restaurant);
             model.addAttribute("menuItems", menuItems);
-            return "restaurant-detail"; // restaurant-detail.html
+            return "customer/restaurant-detail"; // restaurant-detail.html
         } catch (Exception e) {
             return "redirect:/home?error";
         }
@@ -78,7 +78,7 @@ public class RestaurantDetailController {
                     .sum();
             model.addAttribute("totalAmount", total);
 
-            return "cart"; // cart.html
+            return "customer/cart"; // cart.html
         } catch (Exception e) {
             return "redirect:/home";
         }
