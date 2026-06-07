@@ -49,7 +49,7 @@ public class RestaurantOwnerController {
         }
 
         model.addAttribute("user", loggedInUser);
-        return "owner/owner-dashboard"; // ஃபோல்டர் ஸ்ட்ரக்சர் படி 'owner/' சேர்த்துள்ளேன்
+        return "owner/owner-dashboard"; // ஃபோல்டர் ஸ்ட்রক্ষர் படி 'owner/' சேர்த்துள்ளேன்
     }
 
     // 2. புது ஹோட்டல் ஆட் பண்ற பக்கத்தை காட்ட
@@ -63,7 +63,7 @@ public class RestaurantOwnerController {
         return "owner/add-restaurant";
     }
 
-    // 3. புது ஹோட்டல் ஃபார்ம் சப்மிட் ஆகும்போது (Cloudinary + Owner Mapping)
+    // 3. புது ஹோட்டல் ஃபார்ம் சப்மிட் ஆகும்போது (Cloudinary + Owner Mapping Updated)
     @PostMapping("/restaurant/add")
     public String saveRestaurant(@ModelAttribute Restaurant restaurant,
                                  @RequestParam("imageFile") MultipartFile file,
@@ -78,8 +78,8 @@ public class RestaurantOwnerController {
                 restaurant.setImageUrl(imageUrl);
             }
 
-            // ஹோட்டலுக்கு ஓனர் லிங்க் பண்றோம் (உங்க மாடல் வேரியபிள்படி மாற்றிக்கொள்ளுங்கள்)
-            restaurant.setOwnerId(loggedInUser.getId());
+            // [UPDATED FIX]: வெறும் ID-க்கு பதிலாக முழு User ஆப்ஜெக்ட்டையும் செட் செய்கிறோம்
+            restaurant.setOwner(loggedInUser);
             restaurant.setActive(true); // ஆரம்பத்தில் ஹோட்டல் ஓப்பனில் இருக்கும்படி செட் செய்கிறோம்
 
             restaurantService.saveRestaurant(restaurant);
