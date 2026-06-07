@@ -35,25 +35,21 @@
 <div class="form-container">
     <h2><i class="fa-solid fa-store" style="color: #cb202d;"></i> Register Your Restaurant</h2>
 
-    <form th:action="@{/owner/restaurant/add}" th:object="${restaurant}" method="post" enctype="multipart/form-data">
-
-        <!-- [ADDED FIX]: 400 Bad Request எர்ரரை தடுக்க ஓனர் ஐடி மற்றும் ஆக்டிவ் ஸ்டேட்டஸை ஹிட்டனாக அனுப்புகிறோம் -->
-        <input type="hidden" name="owner.id" th:value="${session.loggedInUser != null ? session.loggedInUser.id : ''}"/>
-        <input type="hidden" th:field="*{active}" value="true" />
+    <form th:action="@{/owner/restaurant/add}" method="post" enctype="multipart/form-data">
 
         <div class="form-group">
             <label>Restaurant Name (உணவகத்தின் பெயர்)</label>
-            <input type="text" th:field="*{name}" class="form-control" placeholder="E.g., Hotel MK Veg" required>
+            <input type="text" name="name" class="form-control" placeholder="E.g., Hotel MK Veg" required>
         </div>
 
         <div class="form-group">
             <label>Cuisine Type (உணவு வகை)</label>
-            <input type="text" th:field="*{cuisineType}" class="form-control" placeholder="E.g., South Indian, Biryani, Chinese" required>
+            <input type="text" name="cuisineType" class="form-control" placeholder="E.g., South Indian, Biryani, Chinese" required>
         </div>
 
         <div class="form-group">
             <label>Full Address (முழு முகவரி)</label>
-            <input type="text" th:field="*{address}" class="form-control" placeholder="E.g., Sirkazhi Road, Mayiladuthurai" required>
+            <input type="text" name="address" class="form-control" placeholder="E.g., Sirkazhi Road, Mayiladuthurai" required>
         </div>
 
         <div class="form-group">
