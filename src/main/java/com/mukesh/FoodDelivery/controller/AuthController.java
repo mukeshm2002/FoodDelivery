@@ -56,7 +56,7 @@ public class AuthController {
             if ("RESTAURANT_OWNER".equals(user.getRole())) {
                 return "redirect:/owner/dashboard";
             }
-            return "redirect:customer/home"; // கஸ்டமரா இருந்தா ஹோம் பேஜ்
+            return "redirect:/home"; // கஸ்டமரா இருந்தா ஹோம் பேஜ்
 
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
