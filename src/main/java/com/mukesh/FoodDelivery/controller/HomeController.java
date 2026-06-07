@@ -41,6 +41,6 @@ public class HomeController {
 
         model.addAttribute("user", loggedInUser);
         model.addAttribute("restaurants", restaurantList);
-        return "home"; // home.html பக்கத்தை லோடு செய்யும்
+        return "customer/home"; // home.html பக்கத்தை லோடு செய்யும்
     }
 }
