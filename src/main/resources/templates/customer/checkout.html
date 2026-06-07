@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FoodDelivery - Checkout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- Navbar Design --- */
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #cb202d;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .nav-item {
+            font-weight: 500;
+            color: #444;
+        }
+
+        /* --- Checkout Layout --- */
+        .checkout-wrapper {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .checkout-section, .order-summary-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #222;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* --- Address Block --- */
+        .address-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .address-card {
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .address-card:hover {
+            border-color: #cb202d;
+        }
+        .address-card input[type="radio"] {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            accent-color: #cb202d;
+        }
+        .address-card.selected {
+            border-color: #cb202d;
+            background-color: #fff8f8;
+        }
+        .address-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            color: #555;
+        }
+        .address-card p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* --- Add New Address Form --- */
+        .add-address-form {
+            background: #fdfdfd;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+        .form-group {
+            flex: 1;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        .btn-save-address {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* --- Payment Options --- */
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .payment-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .payment-label:hover {
+            background: #fdfdfd;
+        }
+        .payment-label input {
+            accent-color: #cb202d;
+        }
+
+        /* --- Right Side Box --- */
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .total-row {
+            border-top: 1px dashed #ddd;
+            padding-top: 15px;
+            font-weight: 600;
+            font-size: 18px;
+            color: #222;
+        }
+        .btn-place-order {
+            width: 100%;
+            background-color: #24963f; /* Success Green */
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+        }
+        .btn-place-order:hover {
+            background-color: #1e7e34;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a th:href="@{/home}" class="logo">
+            <i class="fa-solid fa-utensils"></i> FoodDelivery
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/home}" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
+            <a th:href="@{/cart}" class="nav-item"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+            <a th:href="@{/orders}" class="nav-item"><i class="fa-solid fa-bag-shopping"></i> Orders</a>
+            <a th:href="@{/logout}" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="checkout-wrapper">
+
+    <div class="checkout-section">
+
+        <h3 class="section-title"><i class="fa-solid fa-location-dot" style="color: #cb202d;"></i> 1. Delivery Address</h3>
+
+        <div class="address-grid" id="addressGrid">
+            <div th:each="addr, iter : ${addresses}" class="address-card" th:classappend="${iter.first} ? 'selected' : ''" th:onclick="'selectAddress(this)'">
+                <input type="radio" name="selectedAddr" th:value="${addr.id}" th:checked="${iter.first}">
+                <h4 th:text="${addr.addressType}">HOME</h4>
+                <p th:text="${addr.area}">Street, Area</p>
+                <p th:text="${addr.city}">City - Pincode</p>
+            </div>
+        </div>
+
+        <div class="add-address-form">
+            <h4 style="margin-bottom: 12px; font-size: 14px; color: #444;"><i class="fa-solid fa-plus"></i> புது அட்ரஸ் சேர்க்க</h4>
+            <form th:action="@{/checkout/address/add}" th:object="${newAddress}" method="post">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Address Type</label>
+                        <select th:field="*{addressType}" class="form-control">
+                            <option value="HOME">Home (வீடு)</option>
+                            <option value="WORK">Work (அலுவலகம்)</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Area / Street Details</label>
+                        <input type="text" th:field="*{area}" class="form-control" placeholder="Door No, Street Name" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" th:field="*{city}" class="form-control" placeholder="City" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pincode</label>
+                        <input type="text" th:field="*{pincode}" class="form-control" placeholder="600001" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-save-address">Save Address</button>
+            </form>
+        </div>
+
+        <h3 class="section-title"><i class="fa-solid fa-credit-card" style="color: #cb202d;"></i> 2. Payment Method</h3>
+
+        <form th:action="@{/order/place}" method="post" id="orderForm" onsubmit="return validateCheckout()">
+            <div class="payment-options">
+                <label class="payment-label">
+                    <input type="radio" name="paymentMode" value="COD" checked>
+                    <span><i class="fa-solid fa-money-bill-wave" style="color: #24963f;"></i> Cash on Delivery (COD)</span>
+                </label>
+                <label class="payment-label">
+                    <input type="radio" name="paymentMode" value="UPI">
+                    <span><i class="fa-solid fa-mobile-screen-button" style="color: #0d47a1;"></i> UPI (PhonePe / GPay)</span>
+                </label>
+                <label class="payment-label">
+                    <input type="radio" name="paymentMode" value="CARD">
+                    <span><i class="fa-solid fa-credit-card" style="color: #ff9100;"></i> Credit / Debit Card</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-place-order">Confirm & Place Order <i class="fa-solid fa-check-double"></i></button>
+        </form>
+
+    </div>
+
+    <div class="order-summary-box">
+        <h3 style="font-size: 16px; font-weight:600; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">Order Summary</h3>
+
+        <div th:each="item : ${cart.items}" class="summary-row" style="color: #666;">
+            <span th:text="${item.menuItem.name} + ' x ' + ${item.quantity}">Food x 1</span>
+            <span>₹<span th:text="${item.menuItem.price * item.quantity}">100</span></span>
+        </div>
+
+        <div class="summary-row" style="margin-top: 15px; color: #666;">
+            <span>Item Total</span>
+            <span>₹<span th:text="${totalAmount}">0.00</span></span>
+        </div>
+        <div class="summary-row" style="color: #666;">
+            <span>Delivery Fee</span>
+            <span style="color: #24963f;">FREE</span>
+        </div>
+
+        <div class="summary-row total-row">
+            <span>Grand Total</span>
+            <span>₹<span th:text="${totalAmount}">0.00</span></span>
+        </div>
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+    // அட்ரஸ் கார்டை கிளிக் செய்யும்போது ரேடியோ பட்டனை செலக்ட் பண்ண வைக்க
+    function selectAddress(cardElement) {
+        // எல்லா கார்டில் இருந்தும் 'selected' கிளாஸை நீக்குகிறோம்
+        const cards = document.querySelectorAll('.address-card');
+        cards.forEach(card => card.classList.remove('selected'));
+
+        // கிளிக் செய்யப்பட்ட கார்டுக்கு மட்டும் செலக்ட் கிளாஸ் மற்றும் ரேடியோ ஆன் பண்றோம்
+        cardElement.classList.add('selected');
+        const radioButton = cardElement.querySelector('input[type="radio"]');
+        radioButton.checked = true;
+    }
+
+    // ஆர்டர் சப்மிட் செய்யும்போது அட்ரஸ் இருக்கிறதா என செக் செய்ய
+    function validateCheckout() {
+        const addresses = document.getElementsByName('selectedAddr');
+        let addressSelected = false;
+
+        for (let i = 0; i < addresses.length; i++) {
+            if (addresses[i].checked) {
+                addressSelected = true;
+                break;
+            }
+        }
+
+        if (!addressSelected) {
+            alert("தயவுசெய்து உங்க டெலிவரி அட்ரஸை செலக்ட் அல்லது ஆட் செய்யவும்!");
+            return false;
+        }
+        return true;
+    }
+</script>
+
+</body>
+</html>

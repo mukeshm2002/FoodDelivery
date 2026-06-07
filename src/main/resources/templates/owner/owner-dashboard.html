@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Owner Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #f8f9fa; color: #333; }
+        a { text-decoration: none; color: inherit; }
+
+        .navbar { background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; padding: 15px 0; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .logo { font-size: 24px; font-weight: 600; color: #cb202d; }
+        .nav-links { display: flex; align-items: center; gap: 25px; }
+        .logout-btn { color: #666; font-size: 14px; font-weight: 500; }
+        .logout-btn:hover { color: #cb202d; }
+
+        .main-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .welcome-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .welcome-box h2 { font-size: 24px; font-weight: 600; }
+
+        .btn { padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background-color: #cb202d; color: white; border: none; }
+        .btn-primary:hover { background-color: #b01b26; }
+        .btn-secondary { background-color: #333; color: white; border: none; }
+
+        .restaurant-detail-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); margin-bottom: 30px; display: flex; gap: 25px; align-items: center; }
+        .rest-img { width: 120px; height: 120px; object-fit: cover; border-radius: 10px; }
+
+        .menu-section { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+        .menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .menu-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .menu-table th, .menu-table td { padding: 12px 15px; border-bottom: 1px solid #eee; font-size: 14px; }
+        .menu-table th { background-color: #fcfcfc; font-weight: 600; color: #555; }
+
+        .no-restaurant { text-align: center; background: white; padding: 60px 20px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a th:href="@{/owner/dashboard}" class="logo"><i class="fa-solid fa-utensils"></i> FoodDelivery Owner</a>
+        <div class="nav-links">
+            <span style="font-size: 14px; color:#666;">Welcome, <strong th:text="${session.loggedInUser.name}">Owner</strong></span>
+            <a th:href="@{/logout}" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="main-container">
+
+    <div th:if="${restaurant == null}" class="no-restaurant">
+        <i class="fa-solid fa-store-slash" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
+        <h2>நீங்கள் இன்னும் உணவகம் எதுவும் பதிவு செய்யவில்லை!</h2>
+        <p style="color:#666; margin: 10px 0 25px 0;">உங்களுடைய ஹோட்டலை வாடிக்கையாளர்களுக்கு காட்ட உடனே பதிவு செய்யுங்கள்.</p>
+        <a th:href="@{/restaurant/add}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Your Restaurant</a>
+    </div>
+
+    <div th:if="${restaurant != null}">
+        <div class="welcome-box">
+            <div>
+                <h2>Dashboard</h2>
+                <p style="color:#666; font-size:14px;">உங்களுடைய உணவகத்தின் விபரங்கள் மற்றும் மெனுக்கள்.</p>
+            </div>
+        </div>
+
+        <div class="restaurant-detail-box">
+            <img th:src="${restaurant.imageUrl != null && restaurant.imageUrl != ''} ? ${restaurant.imageUrl} : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80'" class="rest-img" alt="Store Image">
+            <div>
+                <h3 style="font-size: 22px; margin-bottom:5px;" th:text="${restaurant.name}">Hotel Name</h3>
+                <p style="color:#666; font-size:14px; margin-bottom:5px;"><i class="fa-solid fa-bowl-food"></i> <span th:text="${restaurant.cuisineType}">Cuisine</span></p>
+                <p style="color:#666; font-size:14px;"><i class="fa-solid fa-location-dot"></i> <span th:text="${restaurant.address}">Address</span></p>
+            </div>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-header">
+                <h3 style="font-size: 18px; font-weight:600;">Menu Card Management</h3>
+                <a th:href="@{/menu/add}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Food Item</a>
+            </div>
+
+            <table class="menu-table">
+                <thead>
+                <tr>
+                    <th>Food Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${menuItems}">
+                    <td style="font-weight: 600;" th:text="${item.name}">Biryani</td>
+                    <td style="color:#666;" th:text="${item.description}">Spicy and delicious</td>
+                    <td style="font-weight: 600; color:#cb202d;">₹<span th:text="${item.price}">150</span></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(menuItems)}">
+                    <td colspan="3" style="text-align: center; color:#999; padding: 30px;">மெனு கார்டில் இன்னும் எந்த உணவும் சேர்க்கப்படவில்லை!</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

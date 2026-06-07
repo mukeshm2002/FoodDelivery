@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FoodDelivery - Restaurant Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- Navbar Design --- */
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #cb202d;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .nav-item {
+            font-weight: 500;
+            color: #444;
+            transition: color 0.3s;
+        }
+        .nav-item:hover {
+            color: #cb202d;
+        }
+
+        /* --- Restaurant Header --- */
+        .restaurant-header {
+            background: white;
+            padding: 30px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        .header-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .header-info h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 5px;
+        }
+        .header-info p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .rating-badge {
+            background-color: #24963f;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        /* --- Menu Section --- */
+        .menu-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .menu-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #cb202d;
+            display: inline-block;
+        }
+
+        /* --- Menu List Style --- */
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .menu-item-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: box-shadow 0.3s;
+        }
+        .menu-item-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        .item-details h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 5px;
+        }
+        .item-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 8px;
+        }
+        .item-desc {
+            font-size: 14px;
+            color: #777;
+        }
+
+        /* --- Add to Cart Action Area --- */
+        .action-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fdfdfd;
+        }
+        .qty-btn {
+            background: none;
+            border: none;
+            padding: 8px 14px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #cb202d;
+            transition: background 0.2s;
+        }
+        .qty-btn:hover {
+            background: #ffebee;
+        }
+        .qty-input {
+            width: 40px;
+            text-align: center;
+            border: none;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+            background: white;
+        }
+        .btn-add {
+            background-color: #cb202d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-add:hover {
+            background-color: #b01b26;
+        }
+        .no-menu {
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a th:href="@{/home}" class="logo">
+            <i class="fa-solid fa-utensils"></i> FoodDelivery
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/home}" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
+            <a th:href="@{/cart}" class="nav-item"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+            <a th:href="@{/orders}" class="nav-item"><i class="fa-solid fa-bag-shopping"></i> Orders</a>
+            <a th:href="@{/logout}" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="restaurant-header">
+    <div class="header-container">
+        <img th:src="${restaurant.imageUrl != null && restaurant.imageUrl != ''} ? ${restaurant.imageUrl} : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80'"
+             class="header-img" alt="Restaurant Image">
+        <div class="header-info">
+            <h1 th:text="${restaurant.name}">Hotel Name</h1>
+            <p th:text="${restaurant.cuisineType}">Cuisine</p>
+            <p><i class="fa-solid fa-location-dot" style="color: #666;"></i> <span th:text="${restaurant.address}">Address</span></p>
+            <div class="rating-badge"><i class="fa-solid fa-star"></i> 4.2</div>
+        </div>
+    </div>
+</div>
+
+<div class="menu-container">
+    <h2 class="menu-title">Order Food Online</h2>
+
+    <div class="menu-grid">
+        <div th:each="item : ${menuItems}" class="menu-item-card">
+            <div class="item-details">
+                <h3 th:text="${item.name}">Biryani</h3>
+                <div class="item-price">₹<span th:text="${item.price}">150</span></div>
+                <p class="item-desc" th:text="${item.description}">Delicious food item</p>
+            </div>
+
+            <form th:action="@{/cart/add}" method="post" class="action-area">
+                <input type="hidden" name="menuItemId" th:value="${item.id}">
+                <input type="hidden" name="restaurantId" th:value="${restaurant.id}">
+
+                <div class="quantity-selector">
+                    <button type="button" class="qty-btn" th:onclick="'decreaseQty(' + ${item.id} + ')'">-</button>
+                    <input type="text" th:id="'qty-' + ${item.id}" name="quantity" value="1" class="qty-input" readonly>
+                    <button type="button" class="qty-btn" th:onclick="'increaseQty(' + ${item.id} + ')'">+</button>
+                </div>
+
+                <button type="submit" class="btn-add">
+                    <i class="fa-solid fa-plus"></i> Add to Cart
+                </button>
+            </form>
+        </div>
+
+        <div th:if="${#lists.isEmpty(menuItems)}" class="no-menu">
+            <i class="fa-solid fa-border-none" style="font-size: 40px; color: #ccc; margin-bottom: 10px;"></i>
+            <p>தற்போது இந்த உணவகத்தில் மெனு எதுவும் சேர்க்கப்படவில்லை!</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Quantity-ஐ கூட்டுவதற்கு
+    function increaseQty(itemId) {
+        const qtyInput = document.getElementById('qty-' + itemId);
+        let currentQty = parseInt(qtyInput.value);
+        if (currentQty < 10) { // அதிகபட்சம் 10 ஐட்டம்ஸ்
+            qtyInput.value = currentQty + 1;
+        }
+    }
+
+    // Quantity-ஐ குறைப்பதற்கு
+    function decreaseQty(itemId) {
+        const qtyInput = document.getElementById('qty-' + itemId);
+        let currentQty = parseInt(qtyInput.value);
+        if (currentQty > 1) {
+            qtyInput.value = currentQty - 1;
+        }
+    }
+</script>
+
+</body>
+</html>

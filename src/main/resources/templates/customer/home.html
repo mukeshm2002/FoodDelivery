@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FoodDelivery - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- Navbar Design --- */
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #cb202d; /* Zomato Red */
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .nav-item {
+            font-weight: 500;
+            color: #444;
+            transition: color 0.3s;
+        }
+        .nav-item:hover {
+            color: #cb202d;
+        }
+        .welcome-msg {
+            font-size: 14px;
+            color: #666;
+        }
+        .logout-btn {
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .logout-btn:hover {
+            color: #cb202d;
+        }
+
+        /* --- Hero / Search Section --- */
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80') center/cover;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+        .hero-section h1 {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .search-container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 6px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .search-input {
+            flex: 1;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 30px;
+            outline: none;
+        }
+        .search-btn {
+            background-color: #cb202d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .search-btn:hover {
+            background-color: #b01b26;
+        }
+
+        /* --- Main Content Area --- */
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #222;
+        }
+
+        /* --- Restaurant Grid --- */
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .restaurant-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .restaurant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .restaurant-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #ddd;
+        }
+        .restaurant-info {
+            padding: 20px;
+        }
+        .restaurant-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #222;
+        }
+        .restaurant-cuisine {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        .restaurant-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee;
+            padding-top: 12px;
+            font-size: 14px;
+        }
+        .rating-badge {
+            background-color: #24963f;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .no-data {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 50px;
+            color: #666;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a th:href="@{/home}" class="logo">
+            <i class="fa-solid fa-utensils"></i> FoodDelivery
+        </a>
+        <div class="nav-links">
+            <span class="welcome-msg">
+                Welcome, <strong th:text="${user.name}">User</strong>
+            </span>
+            <a th:href="@{/home}" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
+            <a th:href="@{/cart}" class="nav-item"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+            <a th:href="@{/orders}" class="nav-item"><i class="fa-solid fa-bag-shopping"></i> Orders</a>
+            <a th:href="@{/logout}" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="hero-section">
+    <h1>Find the best food & drinks in town</h1>
+    <form th:action="@{/home}" method="get" class="search-container" onsubmit="return handleSearch()">
+        <input type="text" name="search" id="searchInput" class="search-input"
+               th:value="${searchValue}" placeholder="Search for restaurants or cuisines...">
+        <button type="submit" class="search-btn">Search</button>
+    </form>
+</div>
+
+<div class="main-container">
+    <h2 class="section-title" th:text="${searchValue != null} ? 'Search Results for \'' + ${searchValue} + '\'' : 'Popular Restaurants'">Popular Restaurants</h2>
+
+    <div class="restaurant-grid">
+        <div th:each="restaurant : ${restaurants}" class="restaurant-card">
+            <a th:href="@{'/restaurant/' + ${restaurant.id}}">
+                <img th:src="${restaurant.imageUrl != null && restaurant.imageUrl != ''} ? ${restaurant.imageUrl} : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'"
+                     class="restaurant-img" alt="Restaurant Image">
+
+                <div class="restaurant-info">
+                    <div class="restaurant-name" th:text="${restaurant.name}">Hotel Name</div>
+                    <div class="restaurant-cuisine" th:text="${restaurant.cuisineType}">Cuisine Type (e.g., South Indian)</div>
+
+                    <div class="restaurant-meta">
+                        <span class="rating-badge">
+                            <i class="fa-solid fa-star"></i> 4.2
+                        </span>
+                        <span class="address-text" th:text="${restaurant.address}">Location</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div th:if="${#lists.isEmpty(restaurants)}" class="no-data">
+            <i class="fa-solid fa-circle-xmark" style="font-size: 40px; color: #ccc; margin-bottom: 10px;"></i>
+            <p>மன்னிக்கவும்! நீங்கள் தேடிய உணவகம் எதுவும் கண்டறியப்படவில்லை.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function handleSearch() {
+        const searchInput = document.getElementById('searchInput').value.trim();
+        // சர்ச் பார் காலியா இருந்தா சப்மிட் பண்ண தேவையில்லை, சும்மா என்டர் தட்டினா நார்மல் லிஸ்ட் வரும்
+        return true;
+    }
+</script>
+
+</body>
+</html>

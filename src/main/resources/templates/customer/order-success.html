@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FoodDelivery - Order Success</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .success-card {
+            background: white;
+            max-width: 550px;
+            width: 100%;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .success-icon {
+            font-size: 70px;
+            color: #24963f; /* Success Green */
+            margin-bottom: 20px;
+            animation: popIn 0.5s ease-out;
+        }
+        h2 {
+            font-size: 26px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 10px;
+        }
+        .sub-text {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* --- Bill Info --- */
+        .order-details-box {
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        .order-details-box h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #444;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 6px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        .detail-row:last-child {
+            margin-bottom: 0;
+            font-weight: 600;
+            color: #222;
+            border-top: 1px dashed #ccc;
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+
+        /* --- Buttons --- */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .btn-home {
+            background-color: #cb202d;
+            color: white;
+        }
+        .btn-home:hover {
+            background-color: #b01b26;
+        }
+        .btn-history {
+            background-color: #eee;
+            color: #333;
+        }
+        .btn-history:hover {
+            background-color: #ddd;
+        }
+
+        /* Animation */
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="success-card">
+    <div class="success-icon">
+        <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <h2>ஆர்டர் வெற்றிகரமாக சேர்க்கப்பட்டது!</h2>
+    <p class="sub-text">உங்களுடைய சுவையான உணவு விரைவில் டெலிவரி செய்யப்படும்.</p>
+
+    <div class="order-details-box">
+        <h4>Order Receipt</h4>
+        <div class="detail-row">
+            <span>Order ID:</span>
+            <strong>#<span th:text="${order.id}">1001</span></strong>
+        </div>
+        <div class="detail-row">
+            <span>Restaurant:</span>
+            <span th:text="${order.restaurant.name}">Hotel Name</span>
+        </div>
+        <div class="detail-row">
+            <span>Payment Mode:</span>
+            <span th:text="${order.paymentStatus}">COD / PAID</span>
+        </div>
+        <div class="detail-row">
+            <span>Amount Paid:</span>
+            <strong>₹<span th:text="${order.totalAmount}">0.00</span></strong>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <a th:href="@{/home}" class="btn btn-home"><i class="fa-solid fa-bag-shopping"></i> Shop More</a>
+        <a th:href="@{/orders}" class="btn btn-history"><i class="fa-solid fa-clock-rotate-left"></i> Order History</a>
+    </div>
+</div>
+
+</body>
+</html>

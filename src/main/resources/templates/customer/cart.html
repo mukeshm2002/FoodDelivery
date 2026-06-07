@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FoodDelivery - My Cart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- Navbar Design --- */
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #cb202d;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .nav-item {
+            font-weight: 500;
+            color: #444;
+        }
+
+        /* --- Cart Layout --- */
+        .cart-wrapper {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .cart-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .cart-section, .summary-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #222;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- Cart Items List --- */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .item-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #222;
+        }
+        .item-info p {
+            font-size: 14px;
+            color: #666;
+            margin-top: 2px;
+        }
+        .item-total-price {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* --- Remove Button --- */
+        .btn-remove {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.2s;
+            margin-left: 15px;
+        }
+        .btn-remove:hover {
+            color: #cb202d;
+        }
+
+        /* --- Summary Section --- */
+        .summary-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        .total-row {
+            border-top: 1px dashed #ddd;
+            padding-top: 15px;
+            font-weight: 600;
+            font-size: 18px;
+            color: #222;
+            margin-top: 15px;
+        }
+        .btn-checkout {
+            width: 100%;
+            background-color: #cb202d;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s;
+            text-align: center;
+            display: block;
+        }
+        .btn-checkout:hover {
+            background-color: #b01b26;
+        }
+
+        /* --- Empty Cart View --- */
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            max-width: 600px;
+            margin: 60px auto;
+        }
+        .btn-shop {
+            display: inline-block;
+            background-color: #cb202d;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a th:href="@{/home}" class="logo">
+            <i class="fa-solid fa-utensils"></i> FoodDelivery
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/home}" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
+            <a th:href="@{/cart}" class="nav-item" style="color: #cb202d;"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+            <a th:href="@{/orders}" class="nav-item"><i class="fa-solid fa-bag-shopping"></i> Orders</a>
+            <a th:href="@{/logout}" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="main-container">
+
+    <div th:if="${cart != null && !#lists.isEmpty(cart.items)}" class="cart-wrapper">
+
+        <div class="cart-section">
+            <h2 class="page-title"><i class="fa-solid fa-basket-shopping" style="color: #cb202d;"></i> Shopping Cart</h2>
+
+            <div class="cart-list">
+                <div th:each="item : ${cart.items}" class="cart-item">
+                    <div class="item-info">
+                        <h4 th:text="${item.menuItem.name}">Item Name</h4>
+                        <p>₹<span th:text="${item.menuItem.price}">100</span> x <span th:text="${item.quantity}">1</span></p>
+                    </div>
+
+                    <div style="display: flex; align-items: center;">
+                        <span class="item-total-price">₹<span th:text="${item.menuItem.price * item.quantity}">100</span></span>
+
+                        <form th:action="@{/cart/remove}" method="post" style="display:inline;" onsubmit="return confirmRemove()">
+                            <input type="hidden" name="cartItemId" th:value="${item.id}">
+                            <button type="submit" class="btn-remove" title="Remove item">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-section">
+            <h3 class="summary-title">Bill Details</h3>
+            <div class="summary-row">
+                <span>Item Total</span>
+                <span>₹<span th:text="${totalAmount}">0.00</span></span>
+            </div>
+            <div class="summary-row">
+                <span>Delivery Fee</span>
+                <span style="color: #24963f;">FREE</span>
+            </div>
+            <div class="summary-row">
+                <span>Taxes & Charges</span>
+                <span>₹0.00</span>
+            </div>
+
+            <div class="summary-row total-row">
+                <span>To Pay</span>
+                <span>₹<span th:text="${totalAmount}">0.00</span></span>
+            </div>
+
+            <a th:href="@{/checkout}" class="btn-checkout">Proceed to Checkout <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+
+    </div>
+
+    <div th:if="${cart == null || #lists.isEmpty(cart.items)}" class="empty-cart">
+        <i class="fa-solid fa-cart-plus" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
+        <h2>உங்க கார்ட் காலியா இருக்கு!</h2>
+        <p style="color:#666; margin-top: 8px;">சுவையான உணவுகளை ஆர்டர் செய்ய ஹோம் பேஜிற்கு செல்லுங்கள்.</p>
+        <a th:href="@{/home}" class="btn-shop">Browse Restaurants</a>
+    </div>
+
+</div>
+
+<script>
+    function confirmRemove() {
+        return confirm("இந்த உணவை கார்ட்டில் இருந்து நீக்கலாமா?");
+    }
+</script>
+
+</body>
+</html>

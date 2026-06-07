@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FoodDelivery - Order History</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #cb202d;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .nav-item {
+            font-weight: 500;
+            color: #444;
+        }
+
+        /* --- History Layout --- */
+        .history-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .page-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #222;
+        }
+
+        /* --- Order History Cards --- */
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+        .restaurant-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #222;
+        }
+        .order-date {
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-delivered {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        /* --- Items List Inside Card --- */
+        .order-items-list {
+            margin-bottom: 15px;
+        }
+        .ordered-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #f5f5f5;
+        }
+
+        /* --- No Orders View --- */
+        .no-orders {
+            text-align: center;
+            padding: 50px 20px;
+            background: white;
+            border-radius: 12px;
+            color: #666;
+        }
+        .btn-shop {
+            display: inline-block;
+            background-color: #cb202d;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a th:href="@{/home}" class="logo">
+            <i class="fa-solid fa-utensils"></i> FoodDelivery
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/home}" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
+            <a th:href="@{/cart}" class="nav-item"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+            <a th:href="@{/orders}" class="nav-item" style="color: #cb202d;"><i class="fa-solid fa-bag-shopping"></i> Orders</a>
+            <a th:href="@{/logout}" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="history-container">
+    <h2 class="page-title"><i class="fa-solid fa-clock-rotate-left" style="color: #cb202d;"></i> உங்களது பழைய ஆர்டர்கள்</h2>
+
+    <div th:if="${orders != null && !#lists.isEmpty(orders)}">
+        <div th:each="order : ${orders}" class="order-card">
+
+            <div class="card-header">
+                <div>
+                    <div class="restaurant-name" th:text="${order.restaurant.name}">Hotel Name</div>
+                    <div class="order-date">Order ID: #<span th:text="${order.id}">1001</span></div>
+                </div>
+                <span class="status-badge"
+                      th:classappend="${order.orderStatus == 'DELIVERED'} ? 'status-delivered' : 'status-pending'"
+                      th:text="${order.orderStatus}">PENDING</span>
+            </div>
+
+            <div class="order-items-list">
+                <div th:each="item : ${order.items}" class="ordered-item">
+                    <span th:text="${item.menuItem.name} + ' x ' + ${item.quantity}">Food Name x 1</span>
+                    <span>₹<span th:text="${item.menuItem.price * item.quantity}">100</span></span>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <span>Total Amount:</span>
+                <span style="color: #cb202d;">₹<span th:text="${order.totalAmount}">0.00</span></span>
+            </div>
+
+        </div>
+    </div>
+
+    <div th:if="${orders == null || #lists.isEmpty(orders)}" class="no-orders">
+        <i class="fa-solid fa-folder-open" style="font-size: 50px; color: #ccc; margin-bottom: 15px;"></i>
+        <h3>நீங்கள் இதுவரை எந்த உணவும் ஆர்டர் செய்யவில்லை!</h3>
+        <a th:href="@{/home}" class="btn-shop">Order Now</a>
+    </div>
+</div>
+
+</body>
+</html>
