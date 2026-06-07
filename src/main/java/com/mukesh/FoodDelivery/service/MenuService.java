@@ -48,6 +48,6 @@ public class MenuService {
 
     // உங்க MenuService கிளாஸ்ல இதை சேர்த்துக்கோங்க:
     public List<MenuItem> getMenuItemsByRestaurant(Long restaurantId) {
-        return menuRepository.findByRestaurantId(restaurantId);
+        return menuItemRepository.findByRestaurantId(restaurantId);
     }
 }
