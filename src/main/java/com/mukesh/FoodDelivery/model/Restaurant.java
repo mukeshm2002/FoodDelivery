@@ -36,5 +36,5 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<MenuItem> menuItems;
 
-    private Long ownerId;
+    // எர்ரர் ஏற்படுத்திய 'private Long ownerId;' இங்கிருந்து நீக்கப்பட்டுவிட்டது.
 }
