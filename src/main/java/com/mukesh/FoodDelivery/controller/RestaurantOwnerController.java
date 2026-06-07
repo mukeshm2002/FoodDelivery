@@ -64,25 +64,35 @@ public class RestaurantOwnerController {
     }
 
     // 3. புது ஹோட்டல் ஃபார்ம் சப்மிட் ஆகும்போது (Cloudinary + Owner Mapping Updated)
+    // RestaurantOwnerController.java உள்ளே இருக்கும் saveRestaurant மெத்தடை மட்டும் மாற்றவும்:
+
     @PostMapping("/restaurant/add")
-    public String saveRestaurant(@ModelAttribute Restaurant restaurant,
+    public String saveRestaurant(@RequestParam("name") String name,
+                                 @RequestParam("cuisineType") String cuisineType,
+                                 @RequestParam("address") String address,
                                  @RequestParam("imageFile") MultipartFile file,
                                  HttpSession session) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) return "redirect:/login";
 
         try {
-            // Cloudinary-ல் இமேஜ் அப்லோடு செய்கிறோம்
+            // 1. நாம் மேனுவலாக புது ரெஸ்டாரண்ட் ஆப்ஜெக்ட் உருவாக்குகிறோம் (No Data Binding Issues!)
+            Restaurant restaurant = new Restaurant();
+            restaurant.setName(name);
+            restaurant.setCuisineType(cuisineType);
+            restaurant.setAddress(address);
+            restaurant.setActive(true);
+            restaurant.setOwner(loggedInUser); // ஓனரை நேரடியாக செட் செய்கிறோம்
+
+            // 2. Cloudinary-ல் இமேஜ் அப்லோடு செய்கிறோம்
             String imageUrl = imageUploadService.uploadImage(file);
             if (imageUrl != null) {
                 restaurant.setImageUrl(imageUrl);
             }
 
-            // [UPDATED FIX]: வெறும் ID-க்கு பதிலாக முழு User ஆப்ஜெக்ட்டையும் செட் செய்கிறோம்
-            restaurant.setOwner(loggedInUser);
-            restaurant.setActive(true); // ஆரம்பத்தில் ஹோட்டல் ஓப்பனில் இருக்கும்படி செட் செய்கிறோம்
-
+            // 3. சேவ் செய்கிறோம்
             restaurantService.saveRestaurant(restaurant);
+
         } catch (IOException e) {
             return "redirect:/owner/restaurant/add?error";
         }
