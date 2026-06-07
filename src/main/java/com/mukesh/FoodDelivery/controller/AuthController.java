@@ -19,7 +19,7 @@ public class AuthController {
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
         model.addAttribute("user", new User());
-        return "register"; // register.html பக்கத்தை தேடும்
+        return "auth/register"; // register.html பக்கத்தை தேடும்
     }
 
     // 2. ரிஜிஸ்ட்ரேஷன் ஃபார்ம் சப்மிட் செய்யும்போது
@@ -30,14 +30,14 @@ public class AuthController {
             return "redirect:/login?success"; // ரிஜிஸ்டர் ஆனதும் லாகின் பக்கத்துக்கு போகும்
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
-            return "register"; // எர்ரர் வந்தா அதே பக்கத்துல காட்டும்
+            return "auth/register"; // எர்ரர் வந்தா அதே பக்கத்துல காட்டும்
         }
     }
 
     // 3. லாகின் பக்கத்தை லோடு செய்ய
     @GetMapping("/login")
     public String showLoginPage() {
-        return "login"; // login.html பக்கத்தை தேடும்
+        return "auth/login"; // login.html பக்கத்தை தேடும்
     }
 
     // 4. லாகின் ஃபார்ம் சப்மிட் செய்யும்போது (Session Management-ஓட)
@@ -56,11 +56,11 @@ public class AuthController {
             if ("RESTAURANT_OWNER".equals(user.getRole())) {
                 return "redirect:/owner/dashboard";
             }
-            return "redirect:/home"; // கஸ்டமரா இருந்தா ஹோம் பேஜ்
+            return "redirect:customer/home"; // கஸ்டமரா இருந்தா ஹோம் பேஜ்
 
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
-            return "login";
+            return "auth/login";
         }
     }
 
@@ -68,6 +68,6 @@ public class AuthController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); // செஷனை காலி பண்ணிட்டு லாகின் பக்கத்துக்கு அனுப்பும்
-        return "redirect:/login?logout";
+        return "redirect:auth/login?logout";
     }
 }
