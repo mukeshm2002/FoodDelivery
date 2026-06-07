@@ -45,7 +45,7 @@
     <div class="nav-container">
         <a th:href="@{/owner/dashboard}" class="logo"><i class="fa-solid fa-utensils"></i> FoodDelivery Owner</a>
         <div class="nav-links">
-            <span style="font-size: 14px; color:#666;">Welcome, <strong th:text="${session.loggedInUser.name}">Owner</strong></span>
+            <span style="font-size: 14px; color:#666;">Welcome, <strong th:text="${user != null ? user.name : 'Owner'}">Owner</strong></span>
             <a th:href="@{/logout}" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
         </div>
     </div>
@@ -57,7 +57,7 @@
         <i class="fa-solid fa-store-slash" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
         <h2>நீங்கள் இன்னும் உணவகம் எதுவும் பதிவு செய்யவில்லை!</h2>
         <p style="color:#666; margin: 10px 0 25px 0;">உங்களுடைய ஹோட்டலை வாடிக்கையாளர்களுக்கு காட்ட உடனே பதிவு செய்யுங்கள்.</p>
-        <a th:href="@{/restaurant/add}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Your Restaurant</a>
+        <a th:href="@{/owner/restaurant/add}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Your Restaurant</a>
     </div>
 
     <div th:if="${restaurant != null}">
@@ -80,7 +80,7 @@
         <div class="menu-section">
             <div class="menu-header">
                 <h3 style="font-size: 18px; font-weight:600;">Menu Card Management</h3>
-                <a th:href="@{/menu/add}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Food Item</a>
+                <a th:href="@{/owner/restaurant/{id}/menu/add(id=${restaurant.id})}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Food Item</a>
             </div>
 
             <table class="menu-table">
