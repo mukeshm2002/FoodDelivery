@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Zomato - Home</title>
+    <title>FoodDelivery - Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -34,19 +34,8 @@
         .main-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
         .section-title { font-size: 24px; font-weight: 600; margin-bottom: 25px; color: #222; display: flex; align-items: center; gap: 10px; }
 
-        /* --- Restaurant Grid --- */
-        .restaurant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px; margin-bottom: 50px; }
-        .restaurant-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 3px 12px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; }
-        .restaurant-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-        .restaurant-img { width: 100%; height: 200px; object-fit: cover; background-color: #ddd; }
-        .restaurant-info { padding: 20px; }
-        .restaurant-name { font-size: 18px; font-weight: 600; margin-bottom: 5px; color: #222; }
-        .restaurant-cuisine { font-size: 14px; color: #666; margin-bottom: 12px; }
-        .restaurant-meta { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 12px; font-size: 14px; }
-        .rating-badge { background-color: #24963f; color: white; padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; }
-
-        /* --- [NEW] Hot & Recent Foods Section --- */
-        .hot-foods-container { display: flex; gap: 20px; overflow-x: auto; padding: 10px 5px 25px 5px; }
+        /* --- Hot & Recent Foods Section --- */
+        .hot-foods-container { display: flex; gap: 20px; overflow-x: auto; padding: 10px 5px 25px 5px; margin-bottom: 40px; }
         .hot-foods-container::-webkit-scrollbar { height: 6px; }
         .hot-foods-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
 
@@ -62,6 +51,17 @@
 
         .btn-add-cart { background: #fff; color: #cb202d; border: 1px solid #cb202d; padding: 6px 0; font-size: 13px; font-weight: 600; border-radius: 6px; cursor: pointer; width: 100%; transition: all 0.2s; text-align: center; }
         .btn-add-cart:hover { background: #cb202d; color: white; }
+
+        /* --- Restaurant Grid --- */
+        .restaurant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px; margin-bottom: 50px; }
+        .restaurant-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 3px 12px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; }
+        .restaurant-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .restaurant-img { width: 100%; height: 200px; object-fit: cover; background-color: #ddd; }
+        .restaurant-info { padding: 20px; }
+        .restaurant-name { font-size: 18px; font-weight: 600; margin-bottom: 5px; color: #222; }
+        .restaurant-cuisine { font-size: 14px; color: #666; margin-bottom: 12px; }
+        .restaurant-meta { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 12px; font-size: 14px; }
+        .rating-badge { background-color: #24963f; color: white; padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; }
 
         .no-data { text-align: center; grid-column: 1 / -1; padding: 50px; color: #666; font-size: 18px; }
     </style>
@@ -91,6 +91,40 @@
 
 <div class="main-container">
 
+    <div th:if="${recentFoods != null and not #lists.isEmpty(recentFoods)}">
+        <h2 class="section-title">
+            <i class="fa-solid fa-fire" style="color: #ff9f43;"></i> Hot & Recent Foods
+            <span style="font-size: 14px; color: #888; font-weight: 400;">(புதிதாக சேர்க்கப்பட்ட சுவையான உணவுகள்)</span>
+        </h2>
+
+        <div class="hot-foods-container">
+            <div th:each="item : ${recentFoods}" class="food-card">
+
+                <div class="food-img-wrapper">
+                    <img th:src="${item.imageUrl != null && item.imageUrl != ''} ? ${item.imageUrl} : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'" class="food-card-img" alt="Food Image">
+                    <span class="food-price-tag">₹<span th:text="${item.price}">150</span></span>
+                </div>
+
+                <div class="food-card-body">
+                    <div class="food-card-name" th:text="${item.name}">Food Name</div>
+
+                    <div class="food-card-rest">
+                        <i class="fa-solid fa-hotel"></i>
+                        <span th:text="${item.restaurant != null} ? ${item.restaurant.name} : 'FoodDelivery Special'">Hotel Name</span>
+                    </div>
+
+                    <form th:action="@{/cart/add}" method="post">
+                        <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}" />
+                        <input type="hidden" name="menuItemId" th:value="${item.id}" />
+                        <button type="submit" class="btn-add-cart">ADD TO CART</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
     <h2 class="section-title">
         <i class="fa-solid fa-store" style="color: #cb202d;"></i>
         <span th:text="${searchValue != null} ? 'Search Results for \'' + ${searchValue} + '\'' : 'Popular Restaurants'">Popular Restaurants</span>
@@ -114,41 +148,6 @@
         <div th:if="${#lists.isEmpty(restaurants)}" class="no-data">
             <i class="fa-solid fa-circle-xmark" style="font-size: 40px; color: #ccc; margin-bottom: 10px;"></i>
             <p>மன்னிக்கவும்! உணவகம் எதுவும் கண்டறியப்படவில்லை.</p>
-        </div>
-    </div>
-
-
-    <div th:if="${recentFoods != null and not #lists.isEmpty(recentFoods)}">
-        <h2 class="section-title">
-            <i class="fa-solid fa-fire" style="color: #ff9f43;"></i> Hot & Recent Foods
-            <span style="font-size: 14px; color: #888; font-weight: 400;">(புதிதாக சேர்க்கப்பட்ட சுவையான உணவுகள்)</span>
-        </h2>
-
-        <div class="hot-foods-container">
-            <div th:each="item : ${recentFoods}" class="food-card">
-
-                <div class="food-img-wrapper">
-                    <img th:src="${item.imageUrl != null && item.imageUrl != ''} ? ${item.imageUrl} : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'" class="food-card-img" alt="Food Image">
-                    <span class="food-price-tag">₹<span th:text="${item.price}">150</span></span>
-                </div>
-
-                <div class="food-card-body">
-                    <div class="food-card-name" th:text="${item.name}">Food Name</div>
-
-                    <div class="food-card-rest">
-                        <i class="fa-solid fa-hotel"></i>
-                        <span th:text="${item.restaurant != null ? item.restaurant.name : 'Unknown Hotel'}">Hotel Name</span>
-                    </div>
-
-                    <form th:action="@{/cart/add}" method="post">
-                        <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}" />
-
-                        <input type="hidden" name="menuItemId" th:value="${item.id}" />
-                        <button type="submit" class="btn-add-cart">ADD TO CART</button>
-                    </form>
-                </div>
-
-            </div>
         </div>
     </div>
 

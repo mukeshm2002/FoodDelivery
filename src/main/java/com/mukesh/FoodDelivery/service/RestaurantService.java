@@ -46,11 +46,11 @@ public class RestaurantService {
         return restaurantRepository.save(restaurant);
     }
 
-    // உங்க RestaurantService கிளாஸிற்குள் இந்த மெத்தடை சேர்க்கவும்:
+    // உங்க RestaurantService.java உள்ளே இருக்கும் மெത്തடை இப்படி மாற்றவும்:
 
     public List<Restaurant> searchRestaurants(String keyword) {
-        // keyword-ஐ ரெண்டு பேராமீட்டருக்கும் பாஸ் பண்றோம் (பேர்லயும் தேடும், குசின்லயும் தேடும்)
-        return restaurantRepository.findByNameContainingIgnoreCaseOrCuisineTypeContainingIgnoreCaseAndIsActiveTrue(keyword, keyword);
+        // இப்போ ஒரே ஒரு பேராமீட்டர் (keyword) மட்டும் பாஸ் பண்ணினா போதும்!
+        return restaurantRepository.searchRestaurants(keyword);
     }
 
 
