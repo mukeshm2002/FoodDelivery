@@ -14,4 +14,7 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
 
     // ஹோட்டல்ல இப்போதைக்கு அவைலபிளா இருக்குற சாப்பாட்டை மட்டும் காட்ட
     List<MenuItem> findByRestaurantIdAndIsAvailableTrue(Long restaurantId);
+
+    // [ADDED]: புதிதாக சேர்க்கப்பட்ட டாப் 8 உணவுகளை மட்டும் எடுக்க
+    List<MenuItem> findTop8ByOrderByIdDesc();
 }

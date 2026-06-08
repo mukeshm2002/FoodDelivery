@@ -50,4 +50,10 @@ public class MenuService {
     public List<MenuItem> getMenuItemsByRestaurant(Long restaurantId) {
         return menuItemRepository.findByRestaurantId(restaurantId);
     }
+
+    // உங்க MenuService கிளாஸிற்குள் இந்த மெத்தடை சேர்க்கவும்:
+
+    public List<MenuItem> getRecentMenuItems() {
+        return menuItemRepository.findTop8ByOrderByIdDesc();
+    }
 }

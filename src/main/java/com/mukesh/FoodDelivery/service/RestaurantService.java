@@ -46,5 +46,12 @@ public class RestaurantService {
         return restaurantRepository.save(restaurant);
     }
 
+    // உங்க RestaurantService கிளாஸிற்குள் இந்த மெத்தடை சேர்க்கவும்:
+
+    public List<Restaurant> searchRestaurants(String keyword) {
+        // keyword-ஐ ரெண்டு பேராமீட்டருக்கும் பாஸ் பண்றோம் (பேர்லயும் தேடும், குசின்லயும் தேடும்)
+        return restaurantRepository.findByNameContainingIgnoreCaseOrCuisineTypeContainingIgnoreCaseAndIsActiveTrue(keyword, keyword);
+    }
+
 
 }

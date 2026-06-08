@@ -18,4 +18,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     // ஒரு குறிப்பிட்ட ஓனருக்கு சொந்தமான ஹோட்டல்களை மட்டும் எடுக்க
     List<Restaurant> findByOwnerId(Long ownerId);
+
+    // [ADDED]: பேரு அல்லது சமையல் வகையை வச்சு தேட (Case-Insensitive)
+    List<Restaurant> findByNameContainingIgnoreCaseOrCuisineTypeContainingIgnoreCaseAndIsActiveTrue(String name, String cuisine);
 }

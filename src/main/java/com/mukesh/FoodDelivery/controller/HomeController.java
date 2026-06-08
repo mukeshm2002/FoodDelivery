@@ -1,9 +1,10 @@
 package com.mukesh.FoodDelivery.controller;
 
-
+import com.mukesh.FoodDelivery.model.MenuItem;
 import com.mukesh.FoodDelivery.model.Restaurant;
 import com.mukesh.FoodDelivery.model.User;
 import com.mukesh.FoodDelivery.service.RestaurantService;
+import com.mukesh.FoodDelivery.service.MenuService; // [ADDED]: மெனு சர்வீஸ் இம்போர்ட்
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,31 +17,31 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
-    private RestaurantService restaurantRepository; // RestaurantService-ஐ கூப்பிடுறோம்
+    private RestaurantService restaurantService; // RestaurantService-ஐ கூப்பிடுறோம்
+
+    @Autowired
+    private MenuService menuService; // [ADDED]: MenuService-ஐ இன்ஜெக்ட் செய்கிறோம்
 
     @GetMapping("/home")
-    public String showHomePage(HttpSession session,
-                               @RequestParam(required = false) String search,
-                               Model model) {
-
-        // செஷன்ல யூசர் இருக்காங்களான்னு செக் பண்றோம் (பாதுகாப்பிற்கு)
+    public String showHomePage(HttpSession session, Model model, @RequestParam(value = "search", required = false) String search) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return "redirect:/login"; // லாகின் பண்ணலைனா திருப்பி அனுப்பிடும்
-        }
+        if (loggedInUser == null) return "redirect:/login";
 
-        List<Restaurant> restaurantList;
-
-        // சர்ச் பாக்ஸ்ல ஏதாச்சும் டைப் பண்ணி தேடினா பில்டர் பண்ணும், இல்லைனா எல்லா ஆக்டிவ் ஹோட்டலையும் காட்டும்
-        if (search != null && !search.isEmpty()) {
-            restaurantList = restaurantRepository.searchRestaurantsByName(search);
+        List<Restaurant> restaurants;
+        if (search != null && !search.trim().isEmpty()) {
+            restaurants = restaurantService.searchRestaurants(search);
             model.addAttribute("searchValue", search);
         } else {
-            restaurantList = restaurantRepository.getAllActiveRestaurants();
+            restaurants = restaurantService.getAllActiveRestaurants();
         }
 
+        // [ADDED]: லேட்டஸ்ட்டா ஆட் செய்யப்பட்ட உணவுகளை எடுக்கிறோம்
+        List<MenuItem> recentFoods = menuService.getRecentMenuItems();
+
+        model.addAttribute("restaurants", restaurants);
+        model.addAttribute("recentFoods", recentFoods); // HTML-க்கு அனுப்புகிறோம்
         model.addAttribute("user", loggedInUser);
-        model.addAttribute("restaurants", restaurantList);
-        return "customer/home"; // home.html பக்கத்தை லோடு செய்யும்
+
+        return "home";
     }
 }

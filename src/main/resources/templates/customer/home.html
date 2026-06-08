@@ -2,286 +2,77 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>FoodDelivery - Home</title>
+    <title>Zomato - Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-        body {
-            background-color: #f8f9fa;
-            color: #333;
-        }
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #f8f9fa; color: #333; }
+        a { text-decoration: none; color: inherit; }
 
         /* --- Navbar Design --- */
-        .navbar {
-            background-color: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 15px 0;
-        }
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: 600;
-            color: #cb202d;
-        }
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-        }
-        .nav-item {
-            font-weight: 500;
-            color: #444;
-            transition: color 0.3s;
-        }
-        .nav-item:hover {
-            color: #cb202d;
-        }
-        .welcome-msg {
-            font-size: 14px;
-            color: #666;
-        }
-        .logout-btn {
-            color: #666;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .logout-btn:hover {
-            color: #cb202d;
-        }
+        .navbar { background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; padding: 15px 0; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .logo { font-size: 24px; font-weight: 600; color: #cb202d; }
+        .nav-links { display: flex; align-items: center; gap: 25px; }
+        .nav-item { font-weight: 500; color: #444; transition: color 0.3s; }
+        .nav-item:hover { color: #cb202d; }
+        .welcome-msg { font-size: 14px; color: #666; }
+        .logout-btn { color: #666; font-size: 14px; font-weight: 500; }
+        .logout-btn:hover { color: #cb202d; }
 
         /* --- Hero / Search Section --- */
-        .hero-section {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80') center/cover;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-            padding: 0 20px;
-        }
-        .hero-section h1 {
-            font-size: 36px;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-        .search-container {
-            width: 100%;
-            max-width: 600px;
-            background: white;
-            padding: 6px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .search-input {
-            flex: 1;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 30px;
-            outline: none;
-        }
-        .search-btn {
-            background-color: #cb202d;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-        .search-btn:hover {
-            background-color: #b01b26;
-        }
+        .hero-section { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80') center/cover; height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 0 20px; }
+        .hero-section h1 { font-size: 36px; font-weight: 600; margin-bottom: 15px; }
+        .search-container { width: 100%; max-width: 600px; background: white; padding: 6px; border-radius: 30px; display: flex; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .search-input { flex: 1; border: none; padding: 12px 20px; font-size: 16px; border-radius: 30px; outline: none; }
+        .search-btn { background-color: #cb202d; color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: 600; transition: background 0.3s; }
+        .search-btn:hover { background-color: #b01b26; }
 
         /* --- Main Content Area --- */
-        .main-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        .section-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 25px;
-            color: #222;
-        }
+        .main-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .section-title { font-size: 24px; font-weight: 600; margin-bottom: 25px; color: #222; display: flex; align-items: center; gap: 10px; }
 
         /* --- Restaurant Grid --- */
-        .restaurant-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 30px;
-        }
-        .restaurant-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-        .restaurant-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        .restaurant-img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            background-color: #ddd;
-        }
-        .restaurant-info {
-            padding: 15px 20px;
-        }
-        .restaurant-name {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #222;
-        }
-        .restaurant-cuisine {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 12px;
-        }
-        .restaurant-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #eee;
-            padding-top: 12px;
-            font-size: 14px;
-        }
-        .rating-badge {
-            background-color: #24963f;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 12px;
-        }
+        .restaurant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px; margin-bottom: 50px; }
+        .restaurant-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 3px 12px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; }
+        .restaurant-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .restaurant-img { width: 100%; height: 200px; object-fit: cover; background-color: #ddd; }
+        .restaurant-info { padding: 20px; }
+        .restaurant-name { font-size: 18px; font-weight: 600; margin-bottom: 5px; color: #222; }
+        .restaurant-cuisine { font-size: 14px; color: #666; margin-bottom: 12px; }
+        .restaurant-meta { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 12px; font-size: 14px; }
+        .rating-badge { background-color: #24963f; color: white; padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; }
 
-        /* --- [ADDED] Food Items Mini Section --- */
-        .food-items-preview {
-            padding: 15px 20px;
-            background: #fafafa;
-            border-top: 1px dashed #eee;
-        }
-        .food-preview-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 10px;
-        }
-        .food-scroll-container {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-        /* கஸ்டம் ஸ்க்ரோல்பார் டிசைன் */
-        .food-scroll-container::-webkit-scrollbar {
-            height: 4px;
-        }
-        .food-scroll-container::-webkit-scrollbar-thumb {
-            background: #ddd;
-            border-radius: 10px;
-        }
-        .food-mini-item {
-            flex: 0 0 130px; /* பிக்சட் வித் ஸ்க்ரோலிங்கிற்கு */
-            background: white;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 8px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .food-mini-img {
-            width: 100%;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 6px;
-            margin-bottom: 6px;
-        }
-        .food-mini-name {
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .food-mini-price {
-            font-size: 12px;
-            color: #cb202d;
-            font-weight: 600;
-            margin: 4px 0;
-        }
-        .btn-mini-add {
-            background: #fff;
-            color: #24963f;
-            border: 1px solid #24963f;
-            padding: 3px 0;
-            font-size: 11px;
-            font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-mini-add:hover {
-            background: #24963f;
-            color: white;
-        }
+        /* --- [NEW] Hot & Recent Foods Section --- */
+        .hot-foods-container { display: flex; gap: 20px; overflow-x: auto; padding: 10px 5px 25px 5px; }
+        .hot-foods-container::-webkit-scrollbar { height: 6px; }
+        .hot-foods-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
 
-        .no-data {
-            text-align: center;
-            grid-column: 1 / -1;
-            padding: 50px;
-            color: #666;
-            font-size: 18px;
-        }
+        .food-card { flex: 0 0 220px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #eee; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s; }
+        .food-card:hover { transform: translateY(-3px); }
+        .food-img-wrapper { position: relative; width: 100%; height: 140px; }
+        .food-card-img { width: 100%; height: 100%; object-fit: cover; }
+        .food-price-tag { position: absolute; bottom: 10px; right: 10px; background: rgba(0, 0, 0, 0.75); color: white; padding: 2px 8px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+
+        .food-card-body { padding: 12px; }
+        .food-card-name { font-size: 15px; font-weight: 600; color: #222; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .food-card-rest { font-size: 12px; color: #e67e22; font-weight: 500; margin-bottom: 10px; display: flex; align-items: center; gap: 4px; }
+
+        .btn-add-cart { background: #fff; color: #cb202d; border: 1px solid #cb202d; padding: 6px 0; font-size: 13px; font-weight: 600; border-radius: 6px; cursor: pointer; width: 100%; transition: all 0.2s; text-align: center; }
+        .btn-add-cart:hover { background: #cb202d; color: white; }
+
+        .no-data { text-align: center; grid-column: 1 / -1; padding: 50px; color: #666; font-size: 18px; }
     </style>
 </head>
 <body>
 
 <nav class="navbar">
     <div class="nav-container">
-        <a th:href="@{/home}" class="logo">
-            <i class="fa-solid fa-utensils"></i> FoodDelivery
-        </a>
+        <a th:href="@{/home}" class="logo"><i class="fa-solid fa-utensils"></i> FoodDelivery</a>
         <div class="nav-links">
-            <span class="welcome-msg">
-                Welcome, <strong th:text="${user != null ? user.name : 'Customer'}">User</strong>
-            </span>
+            <span class="welcome-msg">Welcome, <strong th:text="${user != null ? user.name : 'Customer'}">User</strong></span>
             <a th:href="@{/home}" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
             <a th:href="@{/cart}" class="nav-item"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
             <a th:href="@{/orders}" class="nav-item"><i class="fa-solid fa-bag-shopping"></i> Orders</a>
@@ -292,70 +83,76 @@
 
 <div class="hero-section">
     <h1>Find the best food & drinks in town</h1>
-    <form th:action="@{/home}" method="get" class="search-container" onsubmit="return handleSearch()">
-        <input type="text" name="search" id="searchInput" class="search-input"
-               th:value="${searchValue}" placeholder="Search for restaurants or cuisines...">
+    <form th:action="@{/home}" method="get" class="search-container">
+        <input type="text" name="search" id="searchInput" class="search-input" th:value="${searchValue}" placeholder="Search for restaurants or cuisines...">
         <button type="submit" class="search-btn">Search</button>
     </form>
 </div>
 
 <div class="main-container">
-    <h2 class="section-title" th:text="${searchValue != null} ? 'Search Results for \'' + ${searchValue} + '\'' : 'Popular Restaurants'">Popular Restaurants</h2>
+
+    <h2 class="section-title">
+        <i class="fa-solid fa-store" style="color: #cb202d;"></i>
+        <span th:text="${searchValue != null} ? 'Search Results for \'' + ${searchValue} + '\'' : 'Popular Restaurants'">Popular Restaurants</span>
+    </h2>
 
     <div class="restaurant-grid">
         <div th:each="restaurant : ${restaurants}" class="restaurant-card">
-
             <a th:href="@{'/restaurant/' + ${restaurant.id}}">
-                <img th:src="${restaurant.imageUrl != null && restaurant.imageUrl != ''} ? ${restaurant.imageUrl} : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'"
-                     class="restaurant-img" alt="Restaurant Image">
-
+                <img th:src="${restaurant.imageUrl != null && restaurant.imageUrl != ''} ? ${restaurant.imageUrl} : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'" class="restaurant-img" alt="Restaurant Image">
                 <div class="restaurant-info">
                     <div class="restaurant-name" th:text="${restaurant.name}">Hotel Name</div>
                     <div class="restaurant-cuisine" th:text="${restaurant.cuisineType}">Cuisine Type</div>
-
                     <div class="restaurant-meta">
-                        <span class="rating-badge">
-                            <i class="fa-solid fa-star"></i> 4.2
-                        </span>
+                        <span class="rating-badge"><i class="fa-solid fa-star"></i> 4.2</span>
                         <span class="address-text" th:text="${restaurant.address}">Location</span>
                     </div>
                 </div>
             </a>
-
-            <div class="food-items-preview" th:if="${not #lists.isEmpty(restaurant.menuItems)}">
-                <div class="food-preview-title"><i class="fa-solid fa-fire" style="color: #ff9f43;"></i> Popular Food Items</div>
-
-                <div class="food-scroll-container">
-                    <div th:each="item : ${restaurant.menuItems}" class="food-mini-item">
-
-                        <img th:src="${item.imageUrl != null && item.imageUrl != ''} ? ${item.imageUrl} : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80'"
-                             class="food-mini-img" alt="Food Image">
-
-                        <div class="food-mini-name" th:text="${item.name}">Biryani</div>
-                        <div class="food-mini-price">₹<span th:text="${item.price}">150</span></div>
-
-                        <form th:action="@{/cart/add}" method="post">
-                            <input type="hidden" name="menuItemId" th:value="${item.id}" />
-                            <button type="submit" class="btn-mini-add">ADD</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
         <div th:if="${#lists.isEmpty(restaurants)}" class="no-data">
             <i class="fa-solid fa-circle-xmark" style="font-size: 40px; color: #ccc; margin-bottom: 10px;"></i>
-            <p>மன்னிக்கவும்! நீங்கள் தேடிய உணவகம் எதுவும் கண்டறியப்படவில்லை.</p>
+            <p>மன்னிக்கவும்! உணவகம் எதுவும் கண்டறியப்படவில்லை.</p>
         </div>
     </div>
-</div>
 
-<script>
-    function handleSearch() {
-        return true;
-    }
-</script>
+
+    <div th:if="${recentFoods != null and not #lists.isEmpty(recentFoods)}">
+        <h2 class="section-title">
+            <i class="fa-solid fa-fire" style="color: #ff9f43;"></i> Hot & Recent Foods
+            <span style="font-size: 14px; color: #888; font-weight: 400;">(புதிதாக சேர்க்கப்பட்ட சுவையான உணவுகள்)</span>
+        </h2>
+
+        <div class="hot-foods-container">
+            <div th:each="item : ${recentFoods}" class="food-card">
+
+                <div class="food-img-wrapper">
+                    <img th:src="${item.imageUrl != null && item.imageUrl != ''} ? ${item.imageUrl} : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'" class="food-card-img" alt="Food Image">
+                    <span class="food-price-tag">₹<span th:text="${item.price}">150</span></span>
+                </div>
+
+                <div class="food-card-body">
+                    <div class="food-card-name" th:text="${item.name}">Food Name</div>
+
+                    <div class="food-card-rest">
+                        <i class="fa-solid fa-hotel"></i>
+                        <span th:text="${item.restaurant != null ? item.restaurant.name : 'Unknown Hotel'}">Hotel Name</span>
+                    </div>
+
+                    <form th:action="@{/cart/add}" method="post">
+                        <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}" />
+
+                        <input type="hidden" name="menuItemId" th:value="${item.id}" />
+                        <button type="submit" class="btn-add-cart">ADD TO CART</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>
