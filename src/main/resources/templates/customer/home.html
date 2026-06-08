@@ -84,8 +84,7 @@
 <div class="hero-section">
     <h1>Find the best food & drinks in town</h1>
     <form th:action="@{/home}" method="get" class="search-container">
-        <input type="text" name="search" id="searchInput" class="search-input"
-               th:value="${searchValue != null ? searchValue : ''}" placeholder="Search for restaurants or cuisines...">
+        <input type="text" name="search" id="searchInput" class="search-input" th:value="${searchValue != null ? searchValue : ''}" placeholder="Search for restaurants or cuisines...">
         <button type="submit" class="search-btn">Search</button>
     </form>
 </div>
@@ -116,7 +115,13 @@
 
                     <form th:action="@{/cart/add}" method="post">
                         <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}" />
+
                         <input type="hidden" name="menuItemId" th:value="${item.id}" />
+
+                        <input type="hidden" name="quantity" value="1" />
+
+                        <input type="hidden" name="restaurantId" th:value="${item.restaurant != null ? item.restaurant.id : '1'}" />
+
                         <button type="submit" class="btn-add-cart">ADD TO CART</button>
                     </form>
                 </div>
