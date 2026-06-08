@@ -35,11 +35,18 @@ public class HomeController {
             restaurants = restaurantService.getAllActiveRestaurants();
         }
 
-        // [ADDED]: லேட்டஸ்ட்டா ஆட் செய்யப்பட்ட உணவுகளை எடுக்கிறோம்
-        List<MenuItem> recentFoods = menuService.getRecentMenuItems();
+        // [TRY-CATCH SAFE MODE]: எர்ரர் வந்தாலும் அப்ளிகேஷன் உடையாது
+        List<MenuItem> recentFoods = null;
+        try {
+            recentFoods = menuService.getRecentMenuItems();
+            System.out.println("✅ Recent Foods Loaded: " + (recentFoods != null ? recentFoods.size() : 0));
+        } catch (Exception e) {
+            System.out.println("❌ ERROR WHILE FETCHING RECENT FOODS: " + e.getMessage());
+            e.printStackTrace(); // கன்சோலில் அக்யூரெட் லைன் நம்பர் காட்டும்
+        }
 
         model.addAttribute("restaurants", restaurants);
-        model.addAttribute("recentFoods", recentFoods); // HTML-க்கு அனுப்புகிறோம்
+        model.addAttribute("recentFoods", recentFoods);
         model.addAttribute("user", loggedInUser);
 
         return "home";
