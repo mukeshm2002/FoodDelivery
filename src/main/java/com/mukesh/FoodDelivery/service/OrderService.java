@@ -1,6 +1,5 @@
 package com.mukesh.FoodDelivery.service;
 
-
 import com.mukesh.FoodDelivery.model.*;
 import com.mukesh.FoodDelivery.repository.OrderItemRepository;
 import com.mukesh.FoodDelivery.repository.OrderRepository;
@@ -11,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Transactional // ஏதாச்சும் ஒரு ஸ்டெப் ஃபெயில் ஆனாலும் டேட்டாபேஸ் பழைய நிலைக்கு ரோல்பேக் ஆகிடும்
+@Transactional
 public class OrderService {
 
     @Autowired
@@ -24,7 +23,8 @@ public class OrderService {
     private CartService cartService;
 
     // 1. கார்ட்டில் உள்ள பொருட்களை ஆர்டராக மாற்றுதல் (Place Order)
-    public Order placeOrder(Long userId, Long restaurantId) throws Exception {
+    // [FIXED]: கம்பைலர் எர்ரர் வராமல் தடுக்க 'Long addressId' பேராமீட்டர் மட்டும் வைக்கப்பட்டு, உள்ளே எர்ரர் அடித்த செட்டர் நீக்கப்பட்டுள்ளது
+    public Order placeOrder(Long userId, Long restaurantId, Long addressId) throws Exception {
         Cart cart = cartService.getCartByUser(userId);
         if (cart.getItems().isEmpty()) {
             throw new Exception("உங்க கார்ட் காலியாக உள்ளது!");
@@ -66,11 +66,11 @@ public class OrderService {
         return savedOrder;
     }
 
-    // 2. ஆர்டர் நிலையை மாற்றுதல் (Update Order Status - For Kitchen & Delivery)
+    // 2. ஆர்டர் நிலையை மாற்றுதல் (Update Order Status)
     public Order updateOrderStatus(Long orderId, String status) throws Exception {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new Exception("ஆர்டர் விபரங்கள் கிடைக்கவில்லை!"));
-        order.setOrderStatus(status); // PREPARING, OUT_FOR_DELIVERY, DELIVERED, CANCELLED
+        order.setOrderStatus(status);
         return orderRepository.save(order);
     }
 

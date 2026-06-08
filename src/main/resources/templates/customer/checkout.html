@@ -247,79 +247,79 @@
     </div>
 </nav>
 
-<div class="checkout-wrapper">
+<form th:action="@{/order/place}" method="post" id="orderForm" onsubmit="return validateCheckout()">
+    <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}" />
 
-    <div class="checkout-section">
+    <div class="checkout-wrapper">
 
-        <h3 class="section-title"><i class="fa-solid fa-location-dot" style="color: #cb202d;"></i> 1. Delivery Address</h3>
+        <div class="checkout-section">
 
-        <div class="address-grid" id="addressGrid">
-            <div th:each="addr, iter : ${addresses}" class="address-card" th:classappend="${iter.first} ? 'selected' : ''" th:onclick="'selectAddress(this)'">
-                <input type="radio" name="selectedAddr" th:value="${addr.id}" th:checked="${iter.first}">
-                <h4 th:text="${addr.addressType}">HOME</h4>
-                <p th:text="${addr.addressLine}">Street, Area</p>
-                <p th:text="${addr.city}">City - Pincode</p>
-            </div>
-        </div>
+            <h3 class="section-title"><i class="fa-solid fa-location-dot" style="color: #cb202d;"></i> 1. Delivery Address</h3>
 
-        <div class="add-address-form">
-            <h4 style="margin-bottom: 12px; font-size: 14px; color: #444;"><i class="fa-solid fa-plus"></i> புது அட்ரஸ் சேர்க்க</h4>
-            <form th:action="@{/checkout/address/add}" method="post">
-                <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}" />
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Address Type</label>
-                        <select name="addressType" class="form-control">
-                            <option value="HOME">Home (வீடு)</option>
-                            <option value="WORK">Work (அலுவலகம்)</option>
-                            <option value="OTHER">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Area / Street Details</label>
-                        <input type="text" name="addressLine" class="form-control" placeholder="Door No, Street Name" required>
-                    </div>
+            <div class="address-grid" id="addressGrid">
+                <div th:each="addr, iter : ${addresses}" class="address-card" th:classappend="${iter.first} ? 'selected' : ''" th:onclick="'selectAddress(this)'">
+                    <input type="radio" name="selectedAddr" th:value="${addr.id}" th:checked="${iter.first}">
+                    <h4 th:text="${addr.addressType}">HOME</h4>
+                    <p th:text="${addr.addressLine}">Street, Area</p>
+                    <p th:text="${addr.city}">City - Pincode</p>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>City</label>
-                        <input type="text" name="city" class="form-control" placeholder="City" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Pincode</label>
-                        <input type="text" name="pincode" class="form-control" placeholder="600001" required>
-                    </div>
-                </div>
-                <button type="submit" class="btn-save-address">Save Address</button>
-            </form>
-        </div>
-
-        <h3 class="section-title"><i class="fa-solid fa-credit-card" style="color: #cb202d;"></i> 2. Payment Method</h3>
-
-        <form th:action="@{/order/place}" method="post" id="orderForm" onsubmit="return validateCheckout()">
-            <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}" />
-
-            <input type="hidden" name="selectedAddr" id="hiddenAddressId">
-
-            <div class="payment-options">
-                <label class="payment-label">
-                    <input type="radio" name="paymentMode" value="COD" checked>
-                    <span><i class="fa-solid fa-money-bill-wave" style="color: #24963f;"></i> Cash on Delivery (COD)</span>
-                </label>
-                <label class="payment-label">
-                    <input type="radio" name="paymentMode" value="UPI">
-                    <span><i class="fa-solid fa-mobile-screen-button" style="color: #0d47a1;"></i> UPI (PhonePe / GPay)</span>
-                </label>
-                <label class="payment-label">
-                    <input type="radio" name="paymentMode" value="CARD">
-                    <span><i class="fa-solid fa-credit-card" style="color: #ff9100;"></i> Credit / Debit Card</span>
-                </label>
             </div>
 
-            <button type="submit" class="btn-place-order">Confirm & Place Order <i class="fa-solid fa-check-double"></i></button>
-        </form>
+</form> <div class="add-address-form">
+    <h4 style="margin-bottom: 12px; font-size: 14px; color: #444;"><i class="fa-solid fa-plus"></i> புது அட்ரஸ் சேர்க்க</h4>
+    <form th:action="@{/checkout/address/add}" method="post">
+        <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}" />
 
+        <div class="form-row">
+            <div class="form-group">
+                <label>Address Type</label>
+                <select name="addressType" class="form-control">
+                    <option value="HOME">Home (வீடு)</option>
+                    <option value="WORK">Work (அலுவலகம்)</option>
+                    <option value="OTHER">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Area / Street Details</label>
+                <input type="text" name="addressLine" class="form-control" placeholder="Door No, Street Name" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>City</label>
+                <input type="text" name="city" class="form-control" placeholder="City" required>
+            </div>
+            <div class="form-group">
+                <label>Pincode</label>
+                <input type="text" name="pincode" class="form-control" placeholder="600001" required>
+            </div>
+        </div>
+        <button type="submit" class="btn-save-address">Save Address</button>
+    </form>
+</div>
+
+<form th:action="@{/order/place}" method="post">
+    <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}" />
+    <input type="hidden" name="selectedAddr" id="hiddenAddressId">
+
+    <h3 class="section-title"><i class="fa-solid fa-credit-card" style="color: #cb202d;"></i> 2. Payment Method</h3>
+
+    <div class="payment-options">
+        <label class="payment-label">
+            <input type="radio" name="paymentMode" value="COD" checked>
+            <span><i class="fa-solid fa-money-bill-wave" style="color: #24963f;"></i> Cash on Delivery (COD)</span>
+        </label>
+        <label class="payment-label">
+            <input type="radio" name="paymentMode" value="UPI">
+            <span><i class="fa-solid fa-mobile-screen-button" style="color: #0d47a1;"></i> UPI (PhonePe / GPay)</span>
+        </label>
+        <label class="payment-label">
+            <input type="radio" name="paymentMode" value="CARD">
+            <span><i class="fa-solid fa-credit-card" style="color: #ff9100;"></i> Credit / Debit Card</span>
+        </label>
+    </div>
+
+    <button type="submit" class="btn-place-order">Confirm & Place Order <i class="fa-solid fa-check-double"></i></button>
     </div>
 
     <div class="order-summary-box">
@@ -345,7 +345,8 @@
         </div>
     </div>
 
-</div>
+    </div>
+</form>
 
 <script th:inline="javascript">
     function selectAddress(cardElement) {
@@ -356,16 +357,15 @@
         const radioButton = cardElement.querySelector('input[type="radio"]');
         radioButton.checked = true;
 
-        // [FIX]: கிளிக் செய்யும் போது அட்ரஸ் ID-யை ஃபார்மின் ஹிட்டன் வேல்யூவாக மாற்றுகிறது
         document.getElementById('hiddenAddressId').value = radioButton.value;
     }
 
     function validateCheckout() {
+        // மெயின் ஃபார்மில் இருக்கும் செலக்ட் ஆன ரேடியோவை செக் செய்கிறது
         const addresses = document.getElementsByName('selectedAddr');
         let addressSelected = false;
         let selectedValue = "";
 
-        // லூப்பில் செலக்ட் ஆன கார்டைக் கண்டுபிடிக்கிறது
         for (let i = 0; i < addresses.length; i++) {
             if (addresses[i].checked) {
                 addressSelected = true;
@@ -374,17 +374,23 @@
             }
         }
 
+        // ஒருவேளை மெயின் ஃபார்ம் ரேடியோவில் சிக்கல் இருந்தால், ஹிட்டன் இன்புட்டில் வேல்யூ ஏறிவிட்டதா என செக் செய்கிறது
+        if (!addressSelected) {
+            selectedValue = document.getElementById('hiddenAddressId').value;
+            if(selectedValue) {
+                addressSelected = true;
+            }
+        }
+
         if (!addressSelected) {
             alert("தயவுசெய்து உங்க டெலிவரி அட்ரஸை செலக்ட் அல்லது ஆட் செய்யவும்!");
             return false;
         }
 
-        // சப்மிட் செய்வதற்கு முன் ஹிட்டன் இன்புட்டில் வேல்யூ ஏறிவிட்டதா என உறுதி செய்கிறது
         document.getElementById('hiddenAddressId').value = selectedValue;
         return true;
     }
 
-    // பேஜ் லோடானதும் தானாகவே முதலாவதாக இருக்கும் அட்ரஸின் ID-யை செட் செய்ய
     document.addEventListener("DOMContentLoaded", function() {
         const firstCheckedRadio = document.querySelector('input[name="selectedAddr"]:checked');
         if(firstCheckedRadio) {

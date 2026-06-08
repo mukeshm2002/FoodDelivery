@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Zomato - Order Success</title>
+    <title>FoodDelivery - Order Success</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -136,11 +136,11 @@
         </div>
         <div class="detail-row">
             <span>Restaurant:</span>
-            <span th:text="${order.restaurant.name}">Hotel Name</span>
+            <span th:text="${order.restaurant != null ? order.restaurant.name : 'FoodDelivery Special'}">Hotel Name</span>
         </div>
         <div class="detail-row">
-            <span>Payment Mode:</span>
-            <span th:text="${order.paymentStatus}">COD / PAID</span>
+            <span>Payment Status:</span>
+            <span th:text="${order.orderStatus != null ? order.orderStatus : 'PLACED'}">PLACED</span>
         </div>
         <div class="detail-row">
             <span>Amount Paid:</span>
