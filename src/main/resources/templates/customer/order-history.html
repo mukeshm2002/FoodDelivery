@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Zomato - Order History</title>
+    <title>FoodDelivery - Order History</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -156,7 +156,7 @@
 <nav class="navbar">
     <div class="nav-container">
         <a th:href="@{/home}" class="logo">
-            <i class="fa-solid fa-utensils"></i> Zomato
+            <i class="fa-solid fa-utensils"></i> FoodDelivery
         </a>
         <div class="nav-links">
             <a th:href="@{/home}" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
@@ -175,18 +175,19 @@
 
             <div class="card-header">
                 <div>
-                    <div class="restaurant-name" th:text="${order.restaurant.name}">Hotel Name</div>
+                    <div class="restaurant-name" th:text="${order.restaurant != null ? order.restaurant.name : 'FoodDelivery Restaurant'}">Hotel Name</div>
                     <div class="order-date">Order ID: #<span th:text="${order.id}">1001</span></div>
                 </div>
                 <span class="status-badge"
                       th:classappend="${order.orderStatus == 'DELIVERED'} ? 'status-delivered' : 'status-pending'"
-                      th:text="${order.orderStatus}">PENDING</span>
+                      th:text="${order.orderStatus != null ? order.orderStatus : 'PLACED'}">PENDING</span>
             </div>
 
             <div class="order-items-list">
                 <div th:each="item : ${order.items}" class="ordered-item">
-                    <span th:text="${item.menuItem.name} + ' x ' + ${item.quantity}">Food Name x 1</span>
-                    <span>₹<span th:text="${item.menuItem.price * item.quantity}">100</span></span>
+                    <span th:text="${item.menuItem != null ? item.menuItem.name : 'Delicious Food'} + ' x ' + ${item.quantity}">Food Name x 1</span>
+
+                    <span>₹<span th:text="${item.menuItem != null ? (item.menuItem.price * item.quantity) : (item.price * item.quantity)}">100</span></span>
                 </div>
             </div>
 
