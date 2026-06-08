@@ -49,6 +49,6 @@ public class HomeController {
         model.addAttribute("recentFoods", recentFoods);
         model.addAttribute("user", loggedInUser);
 
-        return "home";
+        return "customer/home";
     }
 }
