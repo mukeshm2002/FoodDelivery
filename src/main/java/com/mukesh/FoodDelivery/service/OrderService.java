@@ -82,8 +82,14 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    // 4. ஒரு கஸ்டமரோட முழு ஆர்டர் ஹிஸ்டரி (Order History)
+    // உங்க OrderService-ல் 4-வது மெத்தடை இப்போதைக்கு இப்படி மாத்தி டெஸ்ட் பண்ணுங்க:
     public List<Order> getCustomerOrderHistory(Long customerId) {
-        return orderRepository.findByCustomerIdOrderByOrderTimeDesc(customerId);
+        try {
+            // உங்க ரெபாசிட்டரி நார்மலா வேலை செய்யுதான்னு பாக்க findAll()
+            return orderRepository.findAll();
+        } catch (Exception e) {
+            System.out.println("எர்ரர் இங்கே தான் மாப்ள: " + e.getMessage());
+            return new java.util.ArrayList<>(); // காலியான லிஸ்ட்டை ரிட்டன் பண்ணும் (பேஜ் உடையாது)
+        }
     }
 }
