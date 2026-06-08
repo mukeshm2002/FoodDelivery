@@ -184,10 +184,14 @@
             </div>
 
             <div class="order-items-list">
-                <div th:each="item : ${order.items}" class="ordered-item">
-                    <span th:text="${item.menuItem != null ? item.menuItem.name : 'Delicious Food'} + ' x ' + ${item.quantity}">Food Name x 1</span>
+                <div th:each="item : ${order.items}" th:if="${item != null}" class="ordered-item">
 
-                    <span>₹<span th:text="${item.menuItem != null ? (item.menuItem.price * item.quantity) : (item.price * item.quantity)}">100</span></span>
+                    <span th:text="${item.menuItem != null ? item.menuItem.name : 'Delicious Food'} + ' x ' + ${item.quantity != null ? item.quantity : 1}">Food Name x 1</span>
+
+                    <span>₹<span th:text="${
+                        item.menuItem != null && item.menuItem.price != null && item.quantity != null ? (item.menuItem.price * item.quantity) :
+                        (item.price != null && item.quantity != null ? (item.price * item.quantity) : 0)
+                    }">100</span></span>
                 </div>
             </div>
 
