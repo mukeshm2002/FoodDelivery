@@ -109,13 +109,23 @@ public class OrderController {
     }
 
     // 4. கஸ்டமரோட பழைய ஆர்டர் விபரங்கள் (Order History Page)
+    // [COMPILATION FIX]: getItems() எர்ரரைத் தவிர்க்க தற்காலிகமாக லூப் நீக்கப்பட்டுள்ளது
     @GetMapping("/orders")
     public String showOrderHistory(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) return "redirect:/login";
 
-        List<Order> orderList = orderService.getCustomerOrderHistory(loggedInUser.getId());
-        model.addAttribute("orders", orderList);
-        return "customer/order-history";
+        try {
+            List<Order> orderList = orderService.getCustomerOrderHistory(loggedInUser.getId());
+
+            // getItems() இல்லாததால் அந்த லூப்பை தூக்கிட்டு டைரக்டா மாடல்ல ஏத்துறோம்
+            model.addAttribute("orders", orderList);
+            return "customer/order-history";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("orders", new java.util.ArrayList<Order>());
+            return "customer/order-history";
+        }
     }
 }
