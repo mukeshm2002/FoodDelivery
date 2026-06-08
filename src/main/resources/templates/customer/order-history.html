@@ -111,17 +111,6 @@
             color: #155724;
         }
 
-        /* --- Items List Inside Card --- */
-        .order-items-list {
-            margin-bottom: 15px;
-        }
-        .ordered-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 5px;
-        }
         .card-footer {
             display: flex;
             justify-content: space-between;
@@ -129,7 +118,6 @@
             font-weight: 600;
             font-size: 15px;
             padding-top: 10px;
-            border-top: 1px solid #f5f5f5;
         }
 
         /* --- No Orders View --- */
@@ -181,18 +169,6 @@
                 <span class="status-badge"
                       th:classappend="${order.orderStatus == 'DELIVERED'} ? 'status-delivered' : 'status-pending'"
                       th:text="${order.orderStatus != null ? order.orderStatus : 'PLACED'}">PENDING</span>
-            </div>
-
-            <div class="order-items-list">
-                <div th:each="item : ${order.items}" th:if="${item != null}" class="ordered-item">
-
-                    <span th:text="${item.menuItem != null ? item.menuItem.name : 'Delicious Food'} + ' x ' + ${item.quantity != null ? item.quantity : 1}">Food Name x 1</span>
-
-                    <span>₹<span th:text="${
-                        item.menuItem != null && item.menuItem.price != null && item.quantity != null ? (item.menuItem.price * item.quantity) :
-                        (item.price != null && item.quantity != null ? (item.price * item.quantity) : 0)
-                    }">100</span></span>
-                </div>
             </div>
 
             <div class="card-footer">
