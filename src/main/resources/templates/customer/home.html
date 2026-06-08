@@ -84,7 +84,8 @@
 <div class="hero-section">
     <h1>Find the best food & drinks in town</h1>
     <form th:action="@{/home}" method="get" class="search-container">
-        <input type="text" name="search" id="searchInput" class="search-input" th:value="${searchValue}" placeholder="Search for restaurants or cuisines...">
+        <input type="text" name="search" id="searchInput" class="search-input"
+               th:value="${searchValue != null ? searchValue : ''}" placeholder="Search for restaurants or cuisines...">
         <button type="submit" class="search-btn">Search</button>
     </form>
 </div>
