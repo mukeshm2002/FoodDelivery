@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Zomato - Checkout</title>
+    <title>FoodDelivery - Checkout</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -52,6 +52,10 @@
         .nav-item {
             font-weight: 500;
             color: #444;
+            transition: color 0.3s;
+        }
+        .nav-item:hover {
+            color: #cb202d;
         }
 
         /* --- Checkout Layout --- */
@@ -143,7 +147,7 @@
             gap: 15px;
             margin-bottom: 12px;
         }
-        .form-group {
+        .form-row .form-group {
             flex: 1;
         }
         .form-group label {
@@ -231,8 +235,9 @@
 
 <nav class="navbar">
     <div class="nav-container">
+        <!-- [BRANDING FIX]: Zomato -> FoodDelivery என மாற்றப்பட்டுள்ளது -->
         <a th:href="@{/home}" class="logo">
-            <i class="fa-solid fa-utensils"></i> Zomato
+            <i class="fa-solid fa-utensils"></i> FoodDelivery
         </a>
         <div class="nav-links">
             <a th:href="@{/home}" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
@@ -261,6 +266,9 @@
         <div class="add-address-form">
             <h4 style="margin-bottom: 12px; font-size: 14px; color: #444;"><i class="fa-solid fa-plus"></i> புது அட்ரஸ் சேர்க்க</h4>
             <form th:action="@{/checkout/address/add}" th:object="${newAddress}" method="post">
+                <!-- CSRF Token (Spring Security பாதுகாப்பு இருந்தால் பயன்படும்) -->
+                <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}" />
+
                 <div class="form-row">
                     <div class="form-group">
                         <label>Address Type</label>
@@ -292,6 +300,9 @@
         <h3 class="section-title"><i class="fa-solid fa-credit-card" style="color: #cb202d;"></i> 2. Payment Method</h3>
 
         <form th:action="@{/order/place}" method="post" id="orderForm" onsubmit="return validateCheckout()">
+            <!-- CSRF Token -->
+            <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}" />
+
             <div class="payment-options">
                 <label class="payment-label">
                     <input type="radio" name="paymentMode" value="COD" checked>
@@ -312,17 +323,19 @@
 
     </div>
 
+    <!-- --- Right Side Box (Order Summary) --- -->
     <div class="order-summary-box">
         <h3 style="font-size: 16px; font-weight:600; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">Order Summary</h3>
 
-        <div th:each="item : ${cart.items}" class="summary-row" style="color: #666;">
-            <span th:text="${item.menuItem.name} + ' x ' + ${item.quantity}">Food x 1</span>
-            <span>₹<span th:text="${item.menuItem.price * item.quantity}">100</span></span>
+        <!-- [THYMELEAF NULL CHECK FIX]: item.menuItem நல் செக் செய்யப்பட்டுள்ளது -->
+        <div th:each="item : ${cart.items}" th:if="${item.menuItem != null}" class="summary-row" style="color: #666;">
+            <span th:text="${item.menuItem.name != null ? item.menuItem.name : 'Unknown Food'} + ' x ' + ${item.quantity}">Food x 1</span>
+            <span>₹<span th:text="${(item.menuItem.price != null ? item.menuItem.price : 0) * item.quantity}">100</span></span>
         </div>
 
         <div class="summary-row" style="margin-top: 15px; color: #666;">
             <span>Item Total</span>
-            <span>₹<span th:text="${totalAmount}">0.00</span></span>
+            <span>₹<span th:text="${totalAmount != null ? totalAmount : 0.00}">0.00</span></span>
         </div>
         <div class="summary-row" style="color: #666;">
             <span>Delivery Fee</span>
@@ -331,7 +344,7 @@
 
         <div class="summary-row total-row">
             <span>Grand Total</span>
-            <span>₹<span th:text="${totalAmount}">0.00</span></span>
+            <span>₹<span th:text="${totalAmount != null ? totalAmount : 0.00}">0.00</span></span>
         </div>
     </div>
 
@@ -340,11 +353,9 @@
 <script th:inline="javascript">
     // அட்ரஸ் கார்டை கிளிக் செய்யும்போது ரேடியோ பட்டனை செலக்ட் பண்ண வைக்க
     function selectAddress(cardElement) {
-        // எல்லா கார்டில் இருந்தும் 'selected' கிளாஸை நீக்குகிறோம்
         const cards = document.querySelectorAll('.address-card');
         cards.forEach(card => card.classList.remove('selected'));
 
-        // கிளிக் செய்யப்பட்ட கார்டுக்கு மட்டும் செலக்ட் கிளாஸ் மற்றும் ரேடியோ ஆன் பண்றோம்
         cardElement.classList.add('selected');
         const radioButton = cardElement.querySelector('input[type="radio"]');
         radioButton.checked = true;

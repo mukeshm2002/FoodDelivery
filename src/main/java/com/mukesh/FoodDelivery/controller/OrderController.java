@@ -34,25 +34,26 @@ public class OrderController {
 
         try {
             Cart cart = cartService.getCartByUser(loggedInUser.getId());
-            if (cart.getItems() == null || cart.getItems().isEmpty()) {
-                return "redirect:customer/cart?error=empty";
+            if (cart == null || cart.getItems() == null || cart.getItems().isEmpty()) {
+                return "redirect:/cart?error=empty"; // [FIX]: பாத் டைரக்டரி சரி செய்யப்பட்டது
             }
 
             // கஸ்டமரோட சேவ் செய்யப்பட்ட அட்ரஸ் லிஸ்ட்டை எடுக்குறோம்
             List<DeliveryAddress> addresses = utilitySupportService.getCustomerAddresses(loggedInUser.getId());
 
             double total = cart.getItems().stream()
-                    .mapToDouble(item -> item.getMenuItem().getPrice() * item.getQuantity())
+                    .mapToDouble(item -> (item.getMenuItem() != null ? item.getMenuItem().getPrice() : 0) * item.getQuantity())
                     .sum();
 
             model.addAttribute("cart", cart);
             model.addAttribute("totalAmount", total);
             model.addAttribute("addresses", addresses);
-            model.addAttribute("newAddress", new DeliveryAddress()); // புது அட்ரஸ் ஆட் பண்ண ஃபார்ம் ஆப்ஜெக்ட்
+            model.addAttribute("newAddress", new DeliveryAddress());
 
             return "customer/checkout"; // checkout.html
         } catch (Exception e) {
-            return "redirect:customer/cart";
+            e.printStackTrace();
+            return "redirect:/cart";
         }
     }
 
@@ -64,7 +65,7 @@ public class OrderController {
 
         address.setCustomer(loggedInUser);
         utilitySupportService.saveAddress(address);
-        return "redirect:/checkout"; // அட்ரஸ் சேவ் ஆனதும் அதே பக்கத்துக்கு ரீப்ஃப்ரெஷ் ஆகும்
+        return "redirect:/checkout";
     }
 
     // 3. ஆர்டரை கன்பர்ம் செய்து பிளேஸ் பண்ண (Confirm and Place Order)
@@ -78,24 +79,28 @@ public class OrderController {
         try {
             Cart cart = cartService.getCartByUser(loggedInUser.getId());
 
-            // [UPDATED] கார்ட் திடீர்னு காலியா இருந்தா கிராஷ் ஆகாம தடுக்க கண்டிஷன்
-            if (cart.getItems() == null || cart.getItems().isEmpty()) {
+            if (cart == null || cart.getItems() == null || cart.getItems().isEmpty()) {
                 return "redirect:/checkout?error=empty_cart";
             }
 
-            // கார்ட்ல இருக்குற முதல் ஐட்டத்தோட ரெஸ்டாரன்ட் ID-யை எடுக்குறோம்
-            Long restaurantId = cart.getItems().get(0).getMenuItem().getRestaurant().getId();
+            // [SAFETY NULL CHECK FIX]: உணவகம் null-ஆக இருந்தால் NullPointerException வராமல் தடுக்கிறோம்
+            Long restaurantId = 1L; // Default ID
+            if (cart.getItems().get(0).getMenuItem() != null &&
+                    cart.getItems().get(0).getMenuItem().getRestaurant() != null) {
+                restaurantId = cart.getItems().get(0).getMenuItem().getRestaurant().getId();
+            }
 
-            // 1. ஆர்டர் பிளேஸ் பண்றோம் (Order & OrderItems டேபிளுக்கு டேட்டா மாறும், கார்ட் காலியாகும்)
+            // 1. ஆர்டர் பிளேஸ் பண்றோம்
             Order order = orderService.placeOrder(loggedInUser.getId(), restaurantId);
 
-            // 2. பேமென்ட் பிராசஸ் பண்றோம் (COD-ஆ இருந்தா Pending, மத்தது Success-னு மாறும்)
+            // 2. பேமென்ட் பிராசஸ் பண்றோம்
             utilitySupportService.processPayment(order, paymentMode);
 
             model.addAttribute("order", order);
-            return "customer/order-success"; // order-success.html (ஆர்டர் கன்பர்ம் ஆன பேஜ்)
+            return "customer/order-success";
 
         } catch (Exception e) {
+            e.printStackTrace();
             return "redirect:/checkout?error=" + e.getMessage();
         }
     }
@@ -108,6 +113,6 @@ public class OrderController {
 
         List<Order> orderList = orderService.getCustomerOrderHistory(loggedInUser.getId());
         model.addAttribute("orders", orderList);
-        return "customer/order-history"; // order-history.html
+        return "customer/order-history";
     }
 }
