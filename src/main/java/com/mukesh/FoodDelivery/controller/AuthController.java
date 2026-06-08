@@ -1,6 +1,5 @@
 package com.mukesh.FoodDelivery.controller;
 
-
 import com.mukesh.FoodDelivery.model.User;
 import com.mukesh.FoodDelivery.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -35,8 +34,17 @@ public class AuthController {
     }
 
     // 3. லாகின் பக்கத்தை லோடு செய்ய
+    // [UPDATED]: லாக்அவுட் அல்லது ரிஜிஸ்ட்ரேஷன் முடிந்து வரும்போது மெசேஜ் காட்ட பேராமீட்டர்களை வாங்குகிறோம்
     @GetMapping("/login")
-    public String showLoginPage() {
+    public String showLoginPage(@RequestParam(value = "logout", required = false) String logout,
+                                @RequestParam(value = "success", required = false) String success,
+                                Model model) {
+        if (logout != null) {
+            model.addAttribute("message", "நீங்கள் வெற்றிகரமாக லாக்-அவுட் செய்யப்பட்டுவிட்டீர்கள்!");
+        }
+        if (success != null) {
+            model.addAttribute("message", "பதிவு வெற்றிகரமாக முடிந்தது! இப்போது லாகின் செய்யலாம்.");
+        }
         return "auth/login"; // login.html பக்கத்தை தேடும்
     }
 
@@ -65,9 +73,10 @@ public class AuthController {
     }
 
     // 5. லாக் அவுட் செய்யும்போது
+    // [FIXED]: 404 எர்ரரைத் தவிர்க்க Relative பாத் மாற்றப்பட்டு, சரியான Absolute பாத் (/login) கொடுக்கப்பட்டுள்ளது
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // செஷனை காலி பண்ணிட்டு லாகின் பக்கத்துக்கு அனுப்பும்
-        return "redirect:auth/login?logout";
+        session.invalidate(); // செஷனை முழுமையாக காலி பண்றோம்
+        return "redirect:/login?logout"; // நேராக முதன்மை லாகின் URL-க்கு ரீடைரெக்ட் செய்கிறது
     }
 }
