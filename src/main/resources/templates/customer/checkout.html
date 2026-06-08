@@ -300,6 +300,8 @@
         <form th:action="@{/order/place}" method="post" id="orderForm" onsubmit="return validateCheckout()">
             <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}" th:value="${_csrf != null ? _csrf.token : ''}" />
 
+            <input type="hidden" name="selectedAddr" id="hiddenAddressId">
+
             <div class="payment-options">
                 <label class="payment-label">
                     <input type="radio" name="paymentMode" value="COD" checked>
@@ -353,15 +355,21 @@
         cardElement.classList.add('selected');
         const radioButton = cardElement.querySelector('input[type="radio"]');
         radioButton.checked = true;
+
+        // [FIX]: கிளிக் செய்யும் போது அட்ரஸ் ID-யை ஃபார்மின் ஹிட்டன் வேல்யூவாக மாற்றுகிறது
+        document.getElementById('hiddenAddressId').value = radioButton.value;
     }
 
     function validateCheckout() {
         const addresses = document.getElementsByName('selectedAddr');
         let addressSelected = false;
+        let selectedValue = "";
 
+        // லூப்பில் செலக்ட் ஆன கார்டைக் கண்டுபிடிக்கிறது
         for (let i = 0; i < addresses.length; i++) {
             if (addresses[i].checked) {
                 addressSelected = true;
+                selectedValue = addresses[i].value;
                 break;
             }
         }
@@ -370,8 +378,19 @@
             alert("தயவுசெய்து உங்க டெலிவரி அட்ரஸை செலக்ட் அல்லது ஆட் செய்யவும்!");
             return false;
         }
+
+        // சப்மிட் செய்வதற்கு முன் ஹிட்டன் இன்புட்டில் வேல்யூ ஏறிவிட்டதா என உறுதி செய்கிறது
+        document.getElementById('hiddenAddressId').value = selectedValue;
         return true;
     }
+
+    // பேஜ் லோடானதும் தானாகவே முதலாவதாக இருக்கும் அட்ரஸின் ID-யை செட் செய்ய
+    document.addEventListener("DOMContentLoaded", function() {
+        const firstCheckedRadio = document.querySelector('input[name="selectedAddr"]:checked');
+        if(firstCheckedRadio) {
+            document.getElementById('hiddenAddressId').value = firstCheckedRadio.value;
+        }
+    });
 </script>
 
 </body>
