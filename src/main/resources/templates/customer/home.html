@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Zomato - Home</title>
+    <title>FoodDelivery - Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -42,7 +42,7 @@
         .logo {
             font-size: 24px;
             font-weight: 600;
-            color: #cb202d; /* Zomato Red */
+            color: #cb202d;
         }
         .nav-links {
             display: flex;
@@ -136,7 +136,7 @@
         /* --- Restaurant Grid --- */
         .restaurant-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 30px;
         }
         .restaurant-card {
@@ -145,6 +145,8 @@
             overflow: hidden;
             box-shadow: 0 3px 12px rgba(0,0,0,0.05);
             transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
         }
         .restaurant-card:hover {
             transform: translateY(-5px);
@@ -152,12 +154,12 @@
         }
         .restaurant-img {
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: cover;
             background-color: #ddd;
         }
         .restaurant-info {
-            padding: 20px;
+            padding: 15px 20px;
         }
         .restaurant-name {
             font-size: 18px;
@@ -186,6 +188,80 @@
             font-weight: 600;
             font-size: 12px;
         }
+
+        /* --- [ADDED] Food Items Mini Section --- */
+        .food-items-preview {
+            padding: 15px 20px;
+            background: #fafafa;
+            border-top: 1px dashed #eee;
+        }
+        .food-preview-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .food-scroll-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        /* கஸ்டம் ஸ்க்ரோல்பார் டிசைன் */
+        .food-scroll-container::-webkit-scrollbar {
+            height: 4px;
+        }
+        .food-scroll-container::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 10px;
+        }
+        .food-mini-item {
+            flex: 0 0 130px; /* பிக்சட் வித் ஸ்க்ரோலிங்கிற்கு */
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .food-mini-img {
+            width: 100%;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+        .food-mini-name {
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .food-mini-price {
+            font-size: 12px;
+            color: #cb202d;
+            font-weight: 600;
+            margin: 4px 0;
+        }
+        .btn-mini-add {
+            background: #fff;
+            color: #24963f;
+            border: 1px solid #24963f;
+            padding: 3px 0;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-mini-add:hover {
+            background: #24963f;
+            color: white;
+        }
+
         .no-data {
             text-align: center;
             grid-column: 1 / -1;
@@ -200,11 +276,11 @@
 <nav class="navbar">
     <div class="nav-container">
         <a th:href="@{/home}" class="logo">
-            <i class="fa-solid fa-utensils"></i> Zomato
+            <i class="fa-solid fa-utensils"></i> FoodDelivery
         </a>
         <div class="nav-links">
             <span class="welcome-msg">
-                Welcome, <strong th:text="${user.name}">User</strong>
+                Welcome, <strong th:text="${user != null ? user.name : 'Customer'}">User</strong>
             </span>
             <a th:href="@{/home}" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
             <a th:href="@{/cart}" class="nav-item"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
@@ -228,13 +304,14 @@
 
     <div class="restaurant-grid">
         <div th:each="restaurant : ${restaurants}" class="restaurant-card">
+
             <a th:href="@{'/restaurant/' + ${restaurant.id}}">
                 <img th:src="${restaurant.imageUrl != null && restaurant.imageUrl != ''} ? ${restaurant.imageUrl} : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'"
                      class="restaurant-img" alt="Restaurant Image">
 
                 <div class="restaurant-info">
                     <div class="restaurant-name" th:text="${restaurant.name}">Hotel Name</div>
-                    <div class="restaurant-cuisine" th:text="${restaurant.cuisineType}">Cuisine Type (e.g., South Indian)</div>
+                    <div class="restaurant-cuisine" th:text="${restaurant.cuisineType}">Cuisine Type</div>
 
                     <div class="restaurant-meta">
                         <span class="rating-badge">
@@ -244,6 +321,27 @@
                     </div>
                 </div>
             </a>
+
+            <div class="food-items-preview" th:if="${not #lists.isEmpty(restaurant.menuItems)}">
+                <div class="food-preview-title"><i class="fa-solid fa-fire" style="color: #ff9f43;"></i> Popular Food Items</div>
+
+                <div class="food-scroll-container">
+                    <div th:each="item : ${restaurant.menuItems}" class="food-mini-item">
+
+                        <img th:src="${item.imageUrl != null && item.imageUrl != ''} ? ${item.imageUrl} : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80'"
+                             class="food-mini-img" alt="Food Image">
+
+                        <div class="food-mini-name" th:text="${item.name}">Biryani</div>
+                        <div class="food-mini-price">₹<span th:text="${item.price}">150</span></div>
+
+                        <form th:action="@{/cart/add}" method="post">
+                            <input type="hidden" name="menuItemId" th:value="${item.id}" />
+                            <button type="submit" class="btn-mini-add">ADD</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div th:if="${#lists.isEmpty(restaurants)}" class="no-data">
@@ -255,8 +353,6 @@
 
 <script>
     function handleSearch() {
-        const searchInput = document.getElementById('searchInput').value.trim();
-        // சர்ச் பார் காலியா இருந்தா சப்மிட் பண்ண தேவையில்லை, சும்மா என்டர் தட்டினா நார்மல் லிஸ்ட் வரும்
         return true;
     }
 </script>
